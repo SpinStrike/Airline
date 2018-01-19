@@ -10,5 +10,7 @@ namespace Airline.AppData.Model
         public string Name { get; set; }
 
         public List<FlightPoint> Points { get; set; }
+
+        public List<AppUser> Users { get; set; }
     }
 }

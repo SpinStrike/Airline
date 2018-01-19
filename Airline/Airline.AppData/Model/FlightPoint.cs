@@ -13,12 +13,6 @@ namespace Airline.AppData.Model
         public Guid CityId { get; set; }
         public City City { get; set; }
 
-        public FlightPointStatus Status { get; set; }
-    }
-
-    public enum FlightPointStatus
-    {
-        From,
-        To
+        public Direction? Direction { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace Airline.AppData.Model
 {
@@ -9,7 +9,6 @@ namespace Airline.AppData.Model
     {
         public string Name { get; set; }
 
-        public Guid AircrewMemberId { get; set; }
-        public AircrewMember AircrewMember { get; set; }
+        public List<AircrewMember> AircrewMember { get; set; }
     }
 }

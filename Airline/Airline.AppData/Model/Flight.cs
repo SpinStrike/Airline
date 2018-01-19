@@ -15,45 +15,48 @@ namespace Airline.AppData.Model
 
         public DateTime ArrivalDate { get; set; }
 
-        public FlightStatus Status { get; set; }
+        public FlightStatus? Status { get; set; } = FlightStatus.Preparing;
 
         public List<FlightPoint> Points { get; set; }
 
         public List<AircrewMember> Aircrew { get; set; }
 
+        public List<ConfirmationRequest> ConfirmationRequests { get; set; }
+
         public Flight()
         {
             Points = new List<FlightPoint>();
             Aircrew = new List<AircrewMember>();
+            ConfirmationRequests = new List<ConfirmationRequest>();
         }
 
         /// <summary>
-        /// Property represent from what city plane will arrive.
+        /// Property represent from what city airplane will arrive.
         /// </summary>
         public City From
         {
             get
             {
-                return GetPoint(FlightPointStatus.From).City;
+                return GetPoint(Direction.From).City;
             }
             set
             {
-                SetPoint(FlightPointStatus.From, value);
+                SetPoint(Direction.From, value);
             }
         }
 
         /// <summary>
-        /// Property represent to what city plane will arrive.
+        /// Property represent to what city airplane will arrive.
         /// </summary>
         public City To
         {
             get
             {
-                return GetPoint(FlightPointStatus.To).City;
+                return GetPoint(Direction.To).City;
             }
             set
             {
-                SetPoint(FlightPointStatus.To, value);
+                SetPoint(Direction.To, value);
             }
         }
 
@@ -65,17 +68,17 @@ namespace Airline.AppData.Model
             }
         }
 
-        private FlightPoint GetPoint(FlightPointStatus status)
+        private FlightPoint GetPoint(Direction status)
         {
-            return Points.FirstOrDefault(x => x.Status == status);
+            return Points.FirstOrDefault(x => x.Direction == status);
         }
 
-        private void SetPoint(FlightPointStatus status, City city)
+        private void SetPoint(Direction status, City city)
         {
-            var fromPoint = GetPoint(status);
+            var targetPoint = GetPoint(status);
 
-            fromPoint.City = city;
-            fromPoint.CityId = city.Id;
+            targetPoint.City = city;
+            targetPoint.CityId = city.Id;
         }
     }
 
@@ -87,5 +90,6 @@ namespace Airline.AppData.Model
         Landed,    //приземлился
         Cancelled, //отменен
         Delayed,   //задержка
+        Preparing  // подтверждение экипажа
     }
 }
