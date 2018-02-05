@@ -1,0 +1,140 @@
+﻿@model Airline.Web.Models.AircrewMemberModel
+
+@{
+    var cities = Model.Cities.Select(x => new SelectListItem()
+    {
+        Text = x.Name,
+        Value = x.Id.ToString(),
+        Selected = x.Id == Model.User.CurrentLocation.Id,
+    });
+
+    var professions = Model.Professions.Select(x => new SelectListItem()
+    {
+        Text = x.Name,
+        Value = x.Id.ToString(),
+        Selected = x.Id == Model.User.Profession.Id,
+    });
+
+    var statuses = new List<SelectListItem>()
+    {
+        new SelectListItem()
+        {
+            Text = "Available",
+            Value = "Available"
+        },
+
+        new SelectListItem()
+        {
+            Text = "Unavailable",
+            Value = "Unavailable"
+        }
+    };
+
+    var disabledBecauseInFlight = Model.User.Status.ToString() == "InFlight" ? "disabled" : "";
+}
+
+<div class="content-elements-border table-element-margin">
+    <div class="row ">
+        <div class="text-center table-element-margin">
+            <span class="h3">Aircrew member information</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 area-element-margin">
+            @Html.Label("Profession:")
+            <span>@Model.User.Profession.Name</span>
+        </div>
+        <div class="col-md-12 area-element-margin">
+            @Html.Label("Current location (city):")
+            <span>@Model.User.CurrentLocation.Name</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 area-element-margin">
+            @Html.Label("Status:")
+            <span>@Model.User.Status.ToString()</span>
+        </div>
+    </div>
+    @if (disabledBecauseInFlight == "disabled")
+    {
+        <div class="row">
+        <div class="col-md-12 area-element-margin">
+            @Html.Label("Flight number:")
+            <span>@Model.FlightNumber</span>
+        </div>
+    </div>
+    }
+</div> 
+<div class="content-elements-border content-element-background">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="content-elements-border table-element-padding table-element-margin text-output-maggin-padding element-list-background">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        @Html.Label("Chage current location")
+                    </div>
+                </div>
+                @using (Html.BeginForm("ChangeCurrentLocation", "Account", new { area = "" }, FormMethod.Post, null))
+                {
+                    <div class="form-group">
+                        <span>Select city</span>
+                        @Html.Hidden("userId", Model.User.Id)
+                        @Html.DropDownList("cityId", cities, null, new { @class = "form-control" })
+                    </div>
+                    <div class=" form-group text-right">
+                        <div class="form-group text-right button-margin-top">
+                            <input type="submit" value="Change" class="btn btn-info  btn-sm" @disabledBecauseInFlight />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="content-elements-border table-element-padding table-element-margin text-output-maggin-padding element-list-background">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        @Html.Label("Change Status")
+                    </div>
+                </div>
+                @using (Html.BeginForm("ChangeStatus", "Account", new { area = "" }, FormMethod.Post, null))
+                {
+                    <div class="form-group">
+                        <span>Select status</span>
+                        @Html.Hidden("userId", Model.User.Id)
+                        @Html.DropDownList("status", statuses, null, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group text-right button-margin-top">
+                        <input type="submit" value="Change" class="btn btn-info  btn-sm" @disabledBecauseInFlight />
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    @if (User.IsInRole("Administrator"))
+    {
+        <div class="row">
+            <div class="col-md-6">
+                <div class="content-elements-border table-element-padding table-element-margin text-output-maggin-padding element-list-background">
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.Label("Change Profession")
+                        </div>
+                    </div>
+                    @using (Html.BeginForm("ChangeProfession", "Account", new { area = "" }, FormMethod.Post, null))
+                {
+                        <div class="form-group text-left">
+                            <span>Select Profession</span>
+                            @Html.Hidden("userId", Model.User.Id)
+                            @Html.DropDownList("professionId", professions, null, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group text-right button-margin-top">
+                            <input type="submit" value="Change" class="btn btn-info  btn-sm" @disabledBecauseInFlight />
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+

@@ -11,7 +11,7 @@ namespace Airline.AppData.EF.Configuration
             Property(x => x.Name);
 
             HasMany(x => x.AircrewMember)
-                .WithRequired(x => x.Profession)
+                .WithOptional(x => x.Profession)
                 .HasForeignKey(x => x.ProfessionId)
                 .WillCascadeOnDelete(false);
         }

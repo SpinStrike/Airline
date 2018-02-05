@@ -1,0 +1,99 @@
+﻿@model Airline.Web.Areas.Admin.Models.UserCreationModel
+@using System
+
+@{
+    ViewBag.Title = "Add User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var maxDate = DateTime.Now;
+}
+
+<div class="col-md-4"></div>
+<div class="col-md-4">
+    <div class="text-center" style="margin-bottom:10px">
+        <span class="h3">Form of adding a new user</span>
+    </div>
+    <div class="content-elements-border home-idenx-element-padding">
+    @using (Html.BeginForm("AddUser", "Creation", new { area="Admin"}, FormMethod.Post, null))
+    {
+        <div class="form-group">
+            @Html.LabelFor(x => x.UserDataModel.FirstName)
+            @Html.TextBoxFor(x => x.UserDataModel.FirstName, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.UserDataModel.FirstName)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.UserDataModel.SecondName)
+            @Html.TextBoxFor(x => x.UserDataModel.SecondName, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.UserDataModel.SecondName)
+        </div>  
+        <div class="form-group">
+            @Html.LabelFor(x => x.UserDataModel.BornDate, "Born Date")
+            @Html.TextBoxFor(x => x.UserDataModel.BornDate, new { type = "date", max = "2018-01-01", @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.UserDataModel.BornDate)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.UserDataModel.PhoneNumber)
+            @Html.TextBoxFor(x => x.UserDataModel.PhoneNumber, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.UserDataModel.PhoneNumber)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.UserDataModel.Email)
+            @Html.TextBoxFor(x => x.UserDataModel.Email, new { @class = "form-control", type = "email", placeholder = "Email" })
+            @Html.ValidationMessageFor(x => x.UserDataModel.Email)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.UserDataModel.Password)
+            @Html.TextBoxFor(x => x.UserDataModel.Password, new { @class = "form-control", type = "password", placeholder = "Password"})
+            @Html.ValidationMessageFor(x => x.UserDataModel.Password)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(x => x.UserDataModel.ConfirmPasword)
+            @Html.TextBoxFor(x => x.UserDataModel.ConfirmPasword, new { @class = "form-control", type = "password", placeholder = "Confirm password" })
+            @Html.ValidationMessageFor(x => x.UserDataModel.ConfirmPasword)
+        </div>
+        <div>
+           <div>
+               @Html.RadioButtonFor(x => x.UserDataModel.Role, "Administrator", new { @class = "form-check-input", onclick = "showHiden(false)", @checked = true })
+               @Html.Label("Administrator" , new { @class= "form-check-label" })
+           </div>
+           <div>
+               @Html.RadioButtonFor(x => x.UserDataModel.Role, "AirTrafficController", new { id = "userLocationId", @class = "form-check-input", onclick = "showHiden(false)" })
+               @Html.Label("Air Traffic Controller", new { @class = "form-check-label"})
+            </div>
+            <div>
+               @Html.RadioButtonFor(x => x.UserDataModel.Role, "AircrewMember", new { id = "userNewProfessionId", @class= "form-check-input", onclick="showHiden(true)"})
+               @Html.Label("Aircrew Member", new { @class = "form-check-label" })
+            </div>
+            <div id="hidenVisibleAreaId" style="display:none;">  
+               <div>
+                   <hr/>
+               </div>
+               <div class="form-group">
+                   @{var selectCities = Model.Cities.Select(x => new SelectListItem()
+                       {
+
+                           Text = x.Name,
+                           Value = x.Id.ToString()
+                       });
+                   }
+                   @Html.LabelFor(x => x.UserDataModel.CityId, "Current aircrew member location")
+                   @Html.DropDownListFor(x => x.UserDataModel.CityId, selectCities, new { @class = "form-control" })
+               </div>
+               <div class="form-group">
+                   @{var selectProfessions = Model.Professions.Select(x => new SelectListItem()
+                        {
+                            Text = x.Name,
+                            Value = x.Id.ToString()
+                        });
+                    }
+                    @Html.LabelFor(x => x.UserDataModel.ProfessionId, "Aircrew member profession")
+                    @Html.DropDownListFor(x => x.UserDataModel.ProfessionId, selectProfessions, new { @class = "form-control" })
+                </div >
+            </div>
+            <div class="text-right">
+                <input type="submit" value="Create" class="btn btn-info" />
+            </div>
+        </div>
+     }
+   </div>
+</div>
+<div class="col-md-4"></div>

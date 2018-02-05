@@ -1,0 +1,77 @@
+﻿@model IEnumerable<Airline.AppLogic.Dto.UserDto> 
+
+@{
+    ViewBag.Title = "Users";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var roles = new List<SelectListItem>()
+    {
+        new SelectListItem(){ Value = "Administrator", Text = "Administrator" },
+        new SelectListItem(){ Value = "AirTrafficController", Text = "AirTrafficController" },
+        new SelectListItem(){ Value = "AircrewMember", Text = "AircrewMember" }
+    };
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="table-element-margin text-center">
+                    <span class="h4">Falcon airline members</span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="table-element-margin text-center">
+                    <span class="h4">Search filters</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-9">
+                <div class="content-elements-border content-element-background height-500px add-vertical-scroll" style="padding:10px;overflow-x:hidden;">
+                    <div id="displayAreaId" class="col-md-12">
+                        @Html.Partial("Users", Model)
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="content-elements-border content-element-background">
+                    <div class="area-element-margin table-element-margin">
+                        @using (Ajax.BeginForm("FindBySecondName", "UserManage", new { area ="Admin"}, new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "displayAreaId", HttpMethod = "Post" }))
+                        {
+                            <div class="form-group">
+                                @Html.Label("Finde by user second name")
+                                @Html.TextBox("secondName", null, new { @class = "form-control", placeholder = "Input user second name"})
+                            </div>
+                            <div class="text-right form-group">
+                                <input type="submit" value="Search" class="btn btn-info btn-sm" />
+                            </div>
+                        }
+                        @using (Ajax.BeginForm("FindByEmail", "UserManage", new { area = "Admin" }, new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "displayAreaId", HttpMethod = "Post" }))
+                        {
+                            <div class="form-group">
+                                @Html.Label("Finde by user e-mail")
+                                @Html.TextBox("email", null, new { @class = "form-control", placeholder = "Input user e-mail" })
+                            </div>
+                            <div class="text-right form-group">
+                                <input type="submit" value="Search" class="btn btn-info btn-sm" />
+                            </div>
+                        }
+                        @using (Ajax.BeginForm("FindByRole", "UserManage", new { area = "Admin" }, new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "displayAreaId", HttpMethod = "Post" }))
+                        {
+
+                            <div class="form-group">
+                                @Html.Label("Finde by user role")
+                                @Html.DropDownList("role", roles, null, new { @class = "form-control" })
+                            </div>
+                            <div class="text-right form-group">
+                                <input type="submit" value="Search" class="btn btn-info btn-sm" />
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div id="deleteOperationAnswerId" class="table-element-margin"></div>
+            </div>
+        </div>
+    </div>
+</div>

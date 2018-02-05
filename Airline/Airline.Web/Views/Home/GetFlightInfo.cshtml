@@ -1,0 +1,86 @@
+﻿@model Airline.Web.Models.FlightInformationModel
+@using Airline.AppLogic.Dto;
+
+@{
+    var isAdministrator = User.IsInRole("Administrator");
+    var isAirTrafficController = User.IsInRole("AirTrafficController");
+}
+
+<div class="text-center" style="margin-bottom:10px">
+    <span class="h4">Flight information</span>
+</div>
+<div>
+    <span>Number: @Model.Flight.Number</span>
+</div>
+<div>
+    <span>Name: @Model.Flight.Name</span>
+</div>
+<div>
+    <span>Departure date: @Model.Flight.DepartureDate.ToString("dd.MM.yyyy")</span>
+</div>
+<div>
+    <span>Arrival date: @Model.Flight.ArrivalDate.ToString("dd.MM.yyyy")</span>
+</div>
+<div>
+    <span>Current status: @Model.Flight.Status.GetDescription()</span>
+</div>
+<div>
+    <hr/>
+</div>
+<div class="text-center" style="margin-bottom:10px">
+    <span class="h4">Flight aircrew</span>
+</div>
+@foreach (var profession in @Model.Members)
+{
+    <div style="table-element-margin">
+        <span><strong>@profession.Key :</strong></span>
+    </div>
+    foreach (var member in profession)
+    {
+        <div>
+            <span style="margin-left: 5px">@member.FirstName @member.SecondName </span>
+       </div>
+    }
+}
+
+@if (isAdministrator || isAirTrafficController)
+{
+    <div>
+        <hr />
+    </div>
+    <div class="text-center" style="margin-bottom:10px">
+        <span class="h4">Manage Flight</span>
+    </div>
+        <div>
+            <span>Change status</span>
+        </div>
+        using (Ajax.BeginForm("SetFlightStatus", "Manage", new { area = "FlightControl" }, new AjaxOptions() { UpdateTargetId = "informationArea",  InsertionMode = InsertionMode.Replace, HttpMethod = "Post" }))
+        {
+            <div class="form-group">
+                @Html.DropDownList("status", Model.AvailableStatuses, null, new { @class = "form-control" })
+                @Html.Hidden("flightId", Model.Flight.Id)
+            </div>
+            <div class="text-right">
+                <input type="submit" value="Set" class = "btn btn-info" />
+            </div>
+        }
+
+        if (isAdministrator)
+        {
+            <div>
+                <span>Change Flight Data</span>
+            </div>
+            <div class="row">
+                <div class="col-md-3 text-left">
+                    @Html.ActionLink("Edit","UpdateFlight", "Manage",new { flightId = Model.Flight.Id , area= "FlightControl" }, new { @class = "btn btn-info" })
+                </div>
+                <div class="col-md-6  text-left">
+                    @using (Ajax.BeginForm("DeletPermanentlyFromList", "Manage", new { area = "FlightControl" }, new AjaxOptions() { HttpMethod = "Post", OnSuccess = "postFlightDeleting" }))
+                    {
+                        @Html.Hidden("flightId", Model.Flight.Id)
+                        <input type="submit" value="Delete" class="btn btn-info" />
+                    }
+                </div>
+            </div>
+        }
+ }

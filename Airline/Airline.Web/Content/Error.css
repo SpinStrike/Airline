@@ -1,0 +1,59 @@
+﻿.field-validation-error {
+    color: #f00;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+.input-validation-error {
+    border: 1px solid #ff003c;
+}
+
+
+
+
+.validation-summary-errors {
+    font-weight: normal;
+    color: #ff003c;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+.field-validation-error {
+    color: #ff003c;
+    font-weight: lighter;
+}
+
+
+.field-validation-error {
+    color: #ff003c;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border: 1px solid #ff003c;
+}
+
+.validation-summary-errors {
+    color: #ff003c;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+
+div#flightRequestMessageId > ul {
+    margin-left: 0; 
+    padding-left: 0;
+}
+
+div#flightRequestMessageId > ul > li {
+    list-style-type: none;
+}

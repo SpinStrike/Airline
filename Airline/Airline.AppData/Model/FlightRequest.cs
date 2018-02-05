@@ -1,18 +1,24 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Airline.AppData.Model
 {
     public class FlightRequest : Entity
     {
+        public bool IsReaded { get; set; }
+
         public string Message { get; set; }
 
         public AdminAnswerStatus Status { get; set; } = AdminAnswerStatus.Undefined;
+
+        public DateTime SendTime { get; set; }  
 
         public List<SendReceiveBroker> RequestBrokers { get; set; }
 
         public FlightRequest()
         {
+            IsReaded = false;
             RequestBrokers = new List<SendReceiveBroker>();
         }
 
@@ -47,6 +53,16 @@ namespace Airline.AppData.Model
 
         private void SetUser(Direction direction, AppUser user)
         {
+            RequestBrokers.Remove(RequestBrokers.FirstOrDefault(x => x.Direction == direction));
+
+            RequestBrokers.Add(new SendReceiveBroker()
+            {
+                Direction = direction,
+                User = user,
+                UserId = user.Id
+            });
+
+
             var targetBroker = GetUser(direction);
 
             targetBroker.User = user;
@@ -56,8 +72,8 @@ namespace Airline.AppData.Model
 
     public enum AdminAnswerStatus
     {
-        Confirm,
-        Canceled,
+        Completed,
+        Rejected,
         Undefined
     }
 }

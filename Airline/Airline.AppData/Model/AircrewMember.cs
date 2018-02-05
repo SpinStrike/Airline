@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Airline.AppData.Model
 {
@@ -8,15 +7,16 @@ namespace Airline.AppData.Model
     /// </summary>
     public class AircrewMember : AppUser
     {
-        public AircrewMemberStatus? Status { get; set; } = AircrewMemberStatus.Available;
+        public AircrewMemberStatus Status { get; set; } = AircrewMemberStatus.Available;
 
-        public Guid  ProfessionId { get; set; }
+        public Guid?  ProfessionId { get; set; }
         public Profession Profession { get; set; }
 
-        public Guid FlightId { get; set; }
-        public Flight Flight { get; set; }
+        public Guid CityId { get; set; }
+        public City CurrentLocation { get; set; }
 
-        public List<ConfirmationRequest> ConfirmationRequests { get; set; }
+        public Guid? FlightId { get; set; }
+        public Flight Flight { get; set; }
     }
 
     public enum AircrewMemberStatus

@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "Access denied";
+}
+
+<div class="row"> 
+    <div class="col-md-12 text-center">
+        <img src="~/Images/falcon_logo.png" alt="falcon_logo"/>
+    </div>
+    <div class="col-md-12 text-center table-element-margin">
+        <span class="h4">The acces is denied</span>
+    </div>
+    <div class="col-md-12 text-center table-element-margin">
+        <span class="h5">Please sign in as another user with available access rights or contact with system administrator</span>
+    </div>
+    <div class="col-md-12 table-element-margin">
+        <div class="row">
+            <div class=" col-md-6 text-right">
+                @Html.ActionLink("Sign in as another user", "SignOff", "Account", new { area = ""},new { @class="btn btn-info"})
+            </div>
+            <div class=" col-md-6 text-left">
+                <input type="button" value="Get administrator contacts" class="btn btn-info" />
+            </div>
+        </div>
+    </div>
+</div>

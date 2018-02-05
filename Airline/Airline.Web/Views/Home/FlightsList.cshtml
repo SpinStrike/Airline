@@ -1,0 +1,34 @@
+﻿@model System.Collections.Generic.IEnumerable<Airline.AppLogic.Dto.FlightDto>
+
+@if (Model.Count() == 0)
+{
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <span>Flights are not found</span>
+        </div>
+    </div>
+}
+else
+{
+    foreach (var flight in Model)
+    {
+        <div  id=@flight.Id class="row table-element-margin content-elements-border table-element-padding">
+            <div class="col-md-2 table-element-padding" style="padding-right:0">
+                <span>@flight.Number</span>
+            </div>
+            <div class="col-md-5 table-element-padding">
+                <span>@flight.Name</span>
+            </div>
+            <div class="col-md-3 table-element-padding">
+                <span>@($"{flight.DepartureDate.ToString("dd.MM.yyyy")}/{flight.ArrivalDate.ToString("dd.MM.yyyy")}")</span>
+            </div>
+            <div class="col-md-2">
+                @using (Ajax.BeginForm("GetFlightInfo", new { area = "" }, new AjaxOptions { UpdateTargetId = "informationArea", InsertionMode = InsertionMode.Replace, HttpMethod = "Post" }, null))
+                {
+                    @Html.Hidden("flightId", flight.Id, new { id = "flightId" })
+                    <input type="submit" value="Details" class="btn btn-info btn-sm pull-right" />
+                }
+            </div>
+        </div>
+    }
+}      

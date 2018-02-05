@@ -1,0 +1,47 @@
+﻿@model System.Collections.Generic.IEnumerable<Airline.Web.Areas.FlightControl.Models.FlightRequestListElementModel>
+@using Airline.Web.Areas.FlightControl.Models
+
+@{
+    ViewBag.Title = "Messages";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var isAirTrafficController = User.IsInRole("AirTrafficController");
+    var isAdministrator = User.IsInRole("Administrator");
+}
+
+<div class="row">
+    <div class="col-md-5 text-center list-margin">
+        <span class="h4">Requests</span>
+    </div>
+    <div class="col-md-7 text-center list-margin">
+        <span class="h4">Request message</span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-5">
+        <div class="content-elements-border content-element-background home-idenx-element-padding height-500px add-vertical-scroll">
+            <div id="listMessagesId">
+                @if (isAirTrafficController)
+                {
+                    @Html.Partial("AirTrafficControllerRequestsList", Model)
+                }
+                else if (isAdministrator)
+                {
+                    @Html.Partial("AdminisdratorRequestsList", Model)
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-7">
+        <div class="content-elements-border home-idenx-element-padding height-500px">
+            <div id="messageAreaId">
+                @if (isAirTrafficController)
+                {
+                    @Html.Partial("WriteRequest", new FlightRequestModel())
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

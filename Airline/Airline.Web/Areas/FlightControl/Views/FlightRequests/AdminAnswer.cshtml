@@ -1,0 +1,43 @@
+﻿@model Airline.Web.Areas.FlightControl.Models.FlightRequestModel
+@using Airline.Web.AdditionalExtensions
+
+<div class="row ">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-8 text-left">
+                <span class="h5"><strong>From:</strong> @Model.From</span>
+            </div>
+            <div class=" col-md-4 form-group text-right">
+                <span class="h5"><strong>Request status:</strong> @Model.Status</span>
+            </div>
+        </div>
+        <div class=" form-group text-left">
+            <span class="h5"><strong>Date:</strong> @Model.Date.ToString("dd-MM-yyyy")</span>
+        </div>
+        <div class="form-group">
+            <p class="h5"><strong>Request text: </strong></p>
+            <div class="content-elements-border table-element-padding height-300px add-vertical-scroll text-output">
+                @foreach (var paragraph in Model.Message.SplitToParagraphs())
+                {
+                    <p>@paragraph</p>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="col-md-6 text-left">
+            @using (Ajax.BeginForm("GenerateRequestForm", "FlightRequests", new AjaxOptions { UpdateTargetId = "messageAreaId", InsertionMode = InsertionMode.Replace, HttpMethod = "POST"}))
+            {
+                <input type="submit" class="btn btn-info" value="Create request">
+            }
+        </div>
+        <div class="col-md-6 text-right" id="deleteButtonId">
+            @using (Ajax.BeginForm("DeleteRequest", "FlightRequests", new AjaxOptions { HttpMethod = "POST", OnSuccess = "requestDeleteSuccess" }))
+            {
+                @Html.Hidden("requestId", Model.Id);
+                <input type="submit" class="btn btn-warning" value="Delete message">
+            }
+        </div>
+    </div>
+
+</div>

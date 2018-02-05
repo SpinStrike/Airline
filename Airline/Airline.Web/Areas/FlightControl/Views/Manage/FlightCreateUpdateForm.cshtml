@@ -1,0 +1,227 @@
+﻿@model Airline.Web.Areas.FlightControl.Models.FlightCreateUpdateModel
+
+@{ 
+    var cities = Model.Cities.Select(x => new SelectListItem()
+    {
+        Text = x.Name,
+        Value = x.Id.ToString(),
+    });
+
+    var statuses = Model.Statuses != null? Model.Statuses.Select(x => new SelectListItem()
+    {
+        Text = x,
+        Value = x,
+    }) : null;
+
+    var defaultList = new List<SelectListItem>();
+    var isNotNull = Model.CurrentAircrewMemebers != null;
+
+    var pilots = isNotNull ? Model.CurrentAircrewMemebers.Where(x => x.Profession.Name == "Pilot").Select(x => new SelectListItem()
+    {
+        Text = $"{x.FirstName} {x.SecondName}",
+        Value = x.Id.ToString(),
+        Selected = true
+    }) : defaultList;
+
+    var navigators = isNotNull ? Model.CurrentAircrewMemebers.Where(x => x.Profession.Name == "Aircraft Navigator").Select(x => new SelectListItem()
+    {
+        Text = $"{x.FirstName} {x.SecondName}",
+        Value = x.Id.ToString(),
+        Selected = true
+    }) : defaultList;
+
+    var radioOperators = isNotNull ? Model.CurrentAircrewMemebers.Where(x => x.Profession.Name == "Radio Operator").Select(x => new SelectListItem()
+    {
+        Text = $"{x.FirstName} {x.SecondName}",
+        Value = x.Id.ToString(),
+        Selected = true
+    }) : defaultList;
+
+    var engineers = isNotNull ? Model.CurrentAircrewMemebers.Where(x => x.Profession.Name == "Flight Engineer").Select(x => new SelectListItem()
+    {
+        Text = $"{x.FirstName} {x.SecondName}",
+        Value = x.Id.ToString(),
+        Selected = true
+    }) : defaultList;
+
+    var stewardeses = isNotNull ? Model.CurrentAircrewMemebers.Where(x => x.Profession.Name == "Stewardess").Select(x => new SelectListItem()
+    {
+        Text = $"{x.FirstName} {x.SecondName}",
+        Value = x.Id.ToString(),
+        Selected = true
+    }) : defaultList;
+
+    var currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+
+    var minDate = Model.FlightDataModel == null ? currentDate : DateTime.Now.AddDays(-3).ToString("yyyy-MM-dd");
+    var maxDate = DateTime.Now.AddMonths(2).ToString("yyyy-MM-dd");
+
+    var depDate = Model.FlightDataModel != null ? Model.FlightDataModel.DepartureDate.ToString("yyyy-MM-dd") : currentDate;
+    var arrivDate = Model.FlightDataModel != null ? Model.FlightDataModel.ArrivalDate.ToString("yyyy-MM-dd") : currentDate;
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            @Html.HiddenFor(x => x.FlightDataModel.Id)
+            @Html.LabelFor(x => x.FlightDataModel.Number)
+            @Html.TextBoxFor(x => x.FlightDataModel.Number, new { @class = "form-control", maxlength = "7" })
+            @Html.ValidationMessageFor(x => x.FlightDataModel.Number)
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            @Html.LabelFor(x => x.FlightDataModel.FromCity, "Departure from city")
+            @Html.DropDownListFor(x => x.FlightDataModel.FromCity, cities, new { onchange = "changeCityId(this)", @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.FlightDataModel.FromCity)
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            @Html.LabelFor(x => x.FlightDataModel.ToCity, "Arrival to city")
+            @Html.DropDownListFor(x => x.FlightDataModel.ToCity, cities, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.FlightDataModel.ToCity)
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        @if (Model.Statuses != null)
+        {
+            @Html.LabelFor(x => x.FlightDataModel.ToCity, "Status")
+            @Html.DropDownListFor(x => x.FlightDataModel.Status, statuses, new { @class = "form-control" })
+        }
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            @Html.LabelFor(x => x.FlightDataModel.DepartureDate)
+            @Html.TextBoxFor(x => x.FlightDataModel.DepartureDate, new { Value = depDate, type = "date", min = minDate , max = maxDate, @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.FlightDataModel.DepartureDate)
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            @Html.LabelFor(x => x.FlightDataModel.ArrivalDate)
+            @Html.TextBoxFor(x => x.FlightDataModel.ArrivalDate, new { Value = arrivDate, type = "date", min = minDate, max = maxDate, @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.FlightDataModel.ArrivalDate)
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="text-center">
+        <span class="h4">Create flight aircrew</span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-5">
+        <div class="form-group">
+            @Html.LabelFor(x => x.FlightDataModel.Pilots, "Selected Pilots (minimum 2 persons)")
+            @Html.ListBoxFor(x => x.FlightDataModel.Pilots, pilots, new { id = "flightPilots", multiple = "true", @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.FlightDataModel.Pilots)
+        </div>
+        <div class="form-group">
+            <input type="button" value="Remove" class="btn btn-warning" onclick="swapOptions('flightPilots', 'availablePilots')" />
+        </div>
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-5 text-right">
+        <div class="form-group">
+            @Html.Label("Available Pilots")
+            @Html.ListBox("AvailablePilots", new List<SelectListItem>(), new { id = "availablePilots", multiple = "true", @class = "form-control" })
+        </div>
+        <div class="form-group">
+            <input type="button" value="Add" class="btn btn-success" onclick="swapOptions('availablePilots', 'flightPilots')" />
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-5">
+        <div class="form-group">
+            @Html.LabelFor(x => x.FlightDataModel.AircraftNavigators, "Selected Aircraft Navigators (minimum 1 person)")
+            @Html.ListBoxFor(x => x.FlightDataModel.AircraftNavigators, navigators, new { id = "flightNavigators", multiple = "true", @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.FlightDataModel.AircraftNavigators)
+        </div>
+        <div class="form-group">
+            <input type="button" value="Remove" class="btn btn-warning" onclick="swapOptions('flightNavigators', 'availableNavigators')" />
+        </div>
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-5 text-right">
+        <div class="form-group">
+            @Html.Label("Available Aircraft Navigators")
+            @Html.ListBox("AvailableAircraftNavigators", new List<SelectListItem>(), new { id = "availableNavigators", multiple = "true", @class = "form-control" })
+        </div>
+        <div class="form-group">
+            <input type="button" value="Add" class="btn btn-success" onclick="swapOptions('availableNavigators', 'flightNavigators')" />
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-5">
+        <div class="form-group">
+            @Html.LabelFor(x => x.FlightDataModel.RadioOperators, "Selected Radio Operators (minimum 1 person)")
+            @Html.ListBoxFor(x => x.FlightDataModel.RadioOperators, radioOperators, new { id = "flightOperators", multiple = "true", @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.FlightDataModel.RadioOperators)
+        </div>
+        <div class="form-group">
+            <input type="button" value="Remove" class="btn btn-warning" onclick="swapOptions('flightOperators', 'availableOperators')" />
+        </div>
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-5 text-right">
+        <div class="form-group">
+            @Html.Label("Available Radio Operators")
+            @Html.ListBox("AvailableRadioOperator", new List<SelectListItem>(), new { id = "availableOperators", multiple = "true", @class = "form-control" })
+        </div>
+        <div class="form-group">
+            <input type="button" value="Add" class="btn btn-success" onclick="swapOptions('availableOperators', 'flightOperators')" />
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-5">
+        <div class="form-group">
+            @Html.LabelFor(x => x.FlightDataModel.FlightEngineers, "Selected Flight Engineers (minimum 1 person)")
+            @Html.ListBoxFor(x => x.FlightDataModel.FlightEngineers, engineers, new { id = "flightEngineers", multiple = "true", @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.FlightDataModel.FlightEngineers)
+        </div>
+        <div class="form-group">
+            <input type="button" value="Remove" class="btn btn-warning" onclick="swapOptions('flightEngineers', 'availableEngineers')" />
+        </div>
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-5 text-right">
+        <div class="form-group">
+            @Html.Label("Available Flight Engineers")
+            @Html.ListBox("AvailableFlightEngineer", new List<SelectListItem>(), new { id = "availableEngineers", multiple = "true", @class = "form-control" })
+        </div>
+        <div class="form-group">
+            <input type="button" value="Add" class="btn btn-success" onclick="swapOptions('availableEngineers', 'flightEngineers')" />
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-5">
+        <div class="form-group">
+            @Html.LabelFor(x => x.FlightDataModel.Stewardesses, "Selected Stewardesses (minimum 3 person)")
+            @Html.ListBoxFor(x => x.FlightDataModel.Stewardesses, stewardeses, new { id = "flightStewardesses", multiple = "true", @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.FlightDataModel.Stewardesses)
+        </div>
+        <div class="form-group">
+
+            <input type="button" value="Remove" class="btn btn-warning" onclick="swapOptions('flightStewardesses', 'availableStewardesses')" />
+        </div>
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-5 text-right">
+        <div class="form-group">
+            @Html.Label("Available Stewardess")
+            @Html.ListBox("AvailableStewardess", new List<SelectListItem>(), new { id = "availableStewardesses", multiple = "true", @class = "form-control" })
+        </div>
+        <div class="form-group">
+            <input type="button" value="Add" class="btn btn-success" onclick="swapOptions('availableStewardesses', 'flightStewardesses')" />
+        </div>
+    </div>
+</div>
+

@@ -15,19 +15,21 @@ namespace Airline.AppData.Model
 
         public DateTime ArrivalDate { get; set; }
 
-        public FlightStatus? Status { get; set; } = FlightStatus.Preparing;
+        public FlightStatus Status { get; set; } = FlightStatus.Preparing;
 
         public List<FlightPoint> Points { get; set; }
 
         public List<AircrewMember> Aircrew { get; set; }
 
-        public List<ConfirmationRequest> ConfirmationRequests { get; set; }
+        public string Name
+        {
+            get { return $"{From.Name} - {To.Name}"; }
+        }
 
         public Flight()
         {
             Points = new List<FlightPoint>();
             Aircrew = new List<AircrewMember>();
-            ConfirmationRequests = new List<ConfirmationRequest>();
         }
 
         /// <summary>
@@ -60,14 +62,6 @@ namespace Airline.AppData.Model
             }
         }
 
-        public string Name
-        {
-            get
-            {
-                return $"{From.Name} - {To.Name}";
-            }
-        }
-
         private FlightPoint GetPoint(Direction status)
         {
             return Points.FirstOrDefault(x => x.Direction == status);
@@ -75,21 +69,22 @@ namespace Airline.AppData.Model
 
         private void SetPoint(Direction status, City city)
         {
-            var targetPoint = GetPoint(status);
+            Points.Remove(Points.FirstOrDefault(x => x.Direction == status));
 
-            targetPoint.City = city;
-            targetPoint.CityId = city.Id;
+            Points.Add(new FlightPoint()
+            {
+                Direction = status,
+                City = null,
+                CityId = city.Id
+            });
         }
     }
 
     public enum FlightStatus
     {
-        Boarding,  //идет посадка
-        Departed,  //вылетел
-        InAir,     //в воздухе
-        Landed,    //приземлился
-        Cancelled, //отменен
-        Delayed,   //задержка
-        Preparing  // подтверждение экипажа
+        Preparing, 
+        InAir,    
+        Landed,    
+        Cancelled, 
     }
 }

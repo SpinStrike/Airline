@@ -1,0 +1,93 @@
+﻿@using Airline.Web.AdditionalExtensions
+
+@{ 
+    ViewBag.Title = $"Falcon - {ViewBag.Title}";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="~/Content/Site.css" />
+    <link rel="stylesheet" href="~/Content/Main.css" />
+    <link rel="stylesheet" href="~/Content/Error.css" />
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Content/bootstrap.css" />
+</head>
+<body id="bodyId">
+   <header>
+       <nav class="navbar navbar-default navbar-static-top">
+          <div class="container">
+              <div class="navbar-header">
+                  <img id="logo" name="logo" src="~/Images/falcon_logo.png" alt="falconlogo" class="img-responsive menu-logo" />
+               </div>
+               <div id="navbar">
+                   <ul class="nav navbar-nav">
+                       <li id="selectedId" @*class="active"*@ onclick="selectNavElement(this)">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>
+                       @if (User.IsInRole("Administrator"))
+                       {
+                        <li class="dropdown" onclick="selectNavElement(this)">
+                           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Administrator Panel<span class="caret"></span></a>
+                           <ul class="dropdown-menu">
+                               <li>@Html.ActionLink("Add User", "AddUser", "Creation", new { area = "Admin" }, null)</li>
+                               <li>@Html.ActionLink("Add City", "AddCity", "Creation", new { area = "Admin" }, null)</li>
+                               <li>@Html.ActionLink("Add Flight", "AddFlight", "Manage", new { area = "FlightControl" }, null)</li>
+                               <li role="separator" class="divider"></li>
+                               <li>@Html.ActionLink("Manage Users", "UserList", "UserManage", new { area = "Admin" }, null)</li>
+                               <li role="separator" class="divider"></li>
+                               <li>@Html.ActionLink("Flight Requests", "Messages", "FlightRequests", new { area = "FlightControl" }, null)</li>
+                           </ul>
+                       </li>
+                       }
+                       else if (User.IsInRole("AirTrafficController"))
+                       {
+                        <li class="dropdown" onclick="selectNavElement(this)">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Control Panel<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("Add Flight", "AddFlight", "Manage", new { area = "FlightControl" }, null)</li>
+                                <li role="separator" class="divider"></li>
+                                <li>@Html.ActionLink("Flight Requests", "Messages", "FlightRequests", new { area = "FlightControl" }, null)</li>
+                            </ul>
+                        </li>
+                       }
+                       <li onclick="selectNavElement(this)"><a href="#" >About</a></li>
+                       <li onclick="selectNavElement(this)"><a href="#">Contact</a></li">
+                    </ul>
+                   <ul class="nav navbar-nav navbar-right">
+                       <li>@Html.ActionLink($"Welcome, {User.Identity.GetFullNameUser()}", "UserInformation", "Account", new { area = "" }, null)</li>
+                       <li id="navUser">@Html.ActionLink("Sign Off", "SignOff", "Account", new { area = "" }, null)</li>
+                   </ul>
+               </div>
+           </div>
+       </nav>
+       </header>
+    <content class="main-content">
+        <div id="content-background" class="container">
+            <div>@RenderBody()</div>
+        </div>
+    </content>
+    <footer class="main-footer">
+        <div class="container-fluid">
+            <div class="raw" style="height: 100%">
+                <div class="col-md-4" style="height: 100%"></div>
+                <div class="text-center col-md-4" style="height: 100%">
+                    <span class="footer-content">
+                        <a href="#logo">&copy; @DateTime.Now.Year - Falcon Airline</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/Scripts/projectScripts.js" type="text/javascript"></script>
+    </body>
+</html>
+
+
+

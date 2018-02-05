@@ -1,0 +1,19 @@
+﻿@model Airline.Web.Models.AircrewMemberModel
+@using Airline.AppLogic.Dto
+
+@{
+    ViewBag.Title = "User Information";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var user = Model.User as UserDto;
+}
+
+<div class="row">
+    <div class="col-md-7">
+        @Html.Partial("GeneralUserInformation", user)
+        @Html.Partial("AdditionalAircrewMemberInformation", Model)
+    </div>
+    <div class="col-md-5">
+        @Html.Partial("GeneralUserDataUpdate", user)
+    </div>
+</div>

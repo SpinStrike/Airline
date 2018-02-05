@@ -6,7 +6,7 @@ namespace Airline.AppData.Model
     {
         public Direction? Direction { get; set; }
 
-        public string UserId { get; set; }
+        public Guid UserId { get; set; }
         public AppUser User { get; set; }
 
         public Guid FlightRequestId { get; set; }

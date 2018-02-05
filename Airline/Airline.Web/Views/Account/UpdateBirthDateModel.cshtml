@@ -1,0 +1,25 @@
+﻿@model Airline.Web.Models.BirthDateModel
+
+<div class="content-elements-border table-element-padding table-element-margin text-output-maggin-padding element-list-background">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            @Html.Label("Change birth date")
+        </div>
+        @using (Html.BeginForm("UpdateBirthDate", "Account", new { area = "" }, FormMethod.Post, null))
+        {
+            <div class="col-md-9">
+                <div class="form-group text-left">
+                    <span>Born date</span>
+                    @Html.HiddenFor(x => x.Id)
+                    @Html.TextBoxFor(x => x.Date, new { @class = "form-control", type = "date" })
+                    @Html.ValidationMessageFor(x => x.Date)
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group text-right button-margin-top">
+                    <input type="submit" value="Change" class="btn btn-info  btn-sm" />
+                </div>
+            </div>
+        }
+    </div>
+</div>

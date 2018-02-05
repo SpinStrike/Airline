@@ -1,0 +1,37 @@
+﻿@model IEnumerable<Airline.AppLogic.Dto.UserDto>
+
+@*<div class="col-md-12">*@
+    @foreach (var user in Model)
+    {
+
+        <div id=@user.Id class="row table-element-margin content-elements-border table-element-padding element-list-background table-element-row-margin">
+            <div class="col-md-4 table-element-padding">
+                <span>@user.FirstName @user.SecondName</span>
+            </div>
+            <div class="col-md-4 table-element-padding">
+                <span>@user.Email</span>
+            </div>
+            <div class="col-md-2 table-element-padding">
+                <span>@user.Role</span>
+            </div>
+            <div class="col-md-2">
+                <div class="row">
+                    <div class="col-md-6">
+                        @using (Ajax.BeginForm("DeleteUser", "UserManage", new { area = "Admin" }, new AjaxOptions() { HttpMethod = "POST", OnSuccess = "deleUser" }, null))
+                        {
+                            @Html.Hidden("userId", user.Id);
+                            <input type="submit" value="Delite" class="btn btn-info btn-sm" />
+                        }
+                    </div>
+                    <div class="col-md-6">
+                        @Html.ActionLink("Edit", "UserInformation", "Account", new { area = "", userId = user.Id }, new { @class = "btn btn-info btn-sm" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+@*</div>*@
+
+
+
+

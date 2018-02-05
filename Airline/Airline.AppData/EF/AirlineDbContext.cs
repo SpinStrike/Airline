@@ -1,11 +1,10 @@
 ﻿using System.Data.Entity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Airline.AppData.EF.Configuration;
 using Airline.AppData.Model;
 
 namespace Airline.AppData.EF
 {
-    public class AirlineDbContext : IdentityDbContext
+    public class AirlineDbContext : DbContext
     {
         public IDbSet<City> Cities { get; set; }
 
@@ -13,11 +12,13 @@ namespace Airline.AppData.EF
 
         public IDbSet<Profession> Professions { get; set; }
 
-        public IDbSet<ConfirmationRequest> ConfirmationRequests { get; set; }
-
         public IDbSet<FlightRequest> FlightRequests { get; set; }
 
         public IDbSet<SendReceiveBroker> Brokers {get;set;}
+
+        public IDbSet<AppUser> Users { get; set; }
+
+        public IDbSet<AppRole> Roles { get; set; }
 
         public AirlineDbContext(string connectionName)
             :base(connectionName)
@@ -43,10 +44,10 @@ namespace Airline.AppData.EF
             modelBuilder.Configurations.Add(new FlightConfiguration());
             modelBuilder.Configurations.Add(new FlightPointConfiguration());
             modelBuilder.Configurations.Add(new AppUserConfiguration());
+            modelBuilder.Configurations.Add(new AppRoleConfiguraton());
             modelBuilder.Configurations.Add(new AircrewMemberConfiguration());
             modelBuilder.Configurations.Add(new ProfessionConfiguration());
             modelBuilder.Configurations.Add(new FlightRequestConfiguration());
-            modelBuilder.Configurations.Add(new ConfirmationRequestConfiguration());
             modelBuilder.Configurations.Add(new SendReceiveBrokerConfiguration());
 
             base.OnModelCreating(modelBuilder);

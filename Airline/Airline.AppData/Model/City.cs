@@ -11,6 +11,6 @@ namespace Airline.AppData.Model
 
         public List<FlightPoint> Points { get; set; }
 
-        public List<AppUser> Users { get; set; }
+        public List<AircrewMember> Users { get; set; }
     }
 }

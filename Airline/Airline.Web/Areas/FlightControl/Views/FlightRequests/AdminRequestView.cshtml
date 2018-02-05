@@ -1,0 +1,42 @@
+﻿@model Airline.Web.Areas.FlightControl.Models.FlightRequestModel
+@using Airline.Web.AdditionalExtensions
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-group text-left">
+            <span class="h5"><strong>From:</strong> @Model.From</span>
+        </div>
+        <div class="form-group text-left">
+            <span class="h5"><strong>Date:</strong> @Model.Date.ToString("dd-MM-yyyy")</span>
+        </div>
+        <div class="form-group">
+            <p class="h5"><strong>Request text: </strong></p>
+            <div class="content-elements-border table-element-padding height-300px add-vertical-scroll text-output">
+                @foreach (var paragraph in Model.Message.SplitToParagraphs())
+                {
+                    <p>@paragraph</p>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-3 text-right">
+            @using (Ajax.BeginForm("AdminFlightAnswer", "FlightRequests", new { area = "FlightControl" }, new AjaxOptions { UpdateTargetId = "messageAreaId", InsertionMode = InsertionMode.Replace, HttpMethod = "Post", OnSuccess = "requestClosedSuccess" }, null))
+            {
+                @Html.Hidden("requestId", Model.Id);
+                @Html.Hidden("isCompleted", false);
+                <input type="submit" class="btn btn-warning" value="Rejected">
+            }
+        </div>
+        <div class="col-md-3 text-left">
+            @using (Ajax.BeginForm("AdminFlightAnswer", "FlightRequests", new { area = "FlightControl" }, new AjaxOptions { UpdateTargetId = "messageAreaId", InsertionMode = InsertionMode.Replace, HttpMethod = "Post", OnSuccess = "requestClosedSuccess" }, null))
+            {
+                @Html.Hidden("requestId", Model.Id);
+                @Html.Hidden("isCompleted", true);
+                <input type="submit" class="btn btn-success" value="Completed">
+            }
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>

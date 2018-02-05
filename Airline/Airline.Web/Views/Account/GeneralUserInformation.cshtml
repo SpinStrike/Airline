@@ -1,0 +1,39 @@
+﻿@model Airline.AppLogic.Dto.UserDto
+
+<div class="content-elements-border table-element-margin">
+    <div class="row">
+        <div class="text-center table-element-margin">
+            <span class="h3">User profile</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12  area-element-margin">
+            @Html.Label("First name:")
+            <span>@Model.FirstName</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 area-element-margin">
+            @Html.Label("Second name:")
+            <span>@Model.SecondName</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 area-element-margin">
+            @Html.Label("Born date:")
+            <span>@Model.BornDate.ToString("dd-MM-yyyy")</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 area-element-margin">
+            @Html.Label("Phone number:")
+            <span>@Model.PhoneNumber</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 area-element-margin">
+            @Html.Label("E-mail date:")
+            <span>@Model.Email</span>
+        </div>
+    </div>
+</div>

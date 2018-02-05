@@ -1,0 +1,17 @@
+﻿@model System.Collections.Generic.IEnumerable<Airline.Web.Areas.FlightControl.Models.FlightRequestListElementModel>
+
+@foreach (var request in Model)
+{
+    using (Ajax.BeginForm("LoadRequestAnswer", "FlightRequests", new { area= "FlightControl" }, new AjaxOptions { UpdateTargetId = "messageAreaId", InsertionMode = InsertionMode.Replace, HttpMethod = "Post" }, null))
+    {
+        <div id="@request.Id" class="row table-element-margin content-elements-border table-element-padding element-list-background">
+            <div class="col-md-9  table-element-padding">
+                <span class="h5"><strong>From:</strong> @request.From</span>
+                @Html.Hidden("Id", request.Id)
+            </div>
+            <div class="col-md-3">
+                <input type="submit" value="Read" class="btn btn-info btn-sm" />
+            </div>
+        </div>
+    }
+}

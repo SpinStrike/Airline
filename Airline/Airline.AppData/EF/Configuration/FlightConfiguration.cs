@@ -18,12 +18,7 @@ namespace Airline.AppData.EF.Configuration
                 .WillCascadeOnDelete(true);
 
             HasMany(x => x.Aircrew)
-                .WithRequired(x => x.Flight)
-                .HasForeignKey(x => x.FlightId)
-                .WillCascadeOnDelete(false);
-
-            HasMany(x => x.ConfirmationRequests)
-                .WithRequired(x => x.Flight)
+                .WithOptional(x => x.Flight)
                 .HasForeignKey(x => x.FlightId)
                 .WillCascadeOnDelete(false);
 

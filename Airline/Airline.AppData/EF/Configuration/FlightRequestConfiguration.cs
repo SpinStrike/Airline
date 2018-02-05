@@ -10,6 +10,8 @@ namespace Airline.AppData.EF.Configuration
             HasKey(x => x.Id);
             Property(x => x.Message);
             Property(x => x.Status);
+            Property(x => x.SendTime);
+            Property(x => x.IsReaded);
 
             HasMany(x => x.RequestBrokers)
                 .WithRequired(x => x.FlightRequest)

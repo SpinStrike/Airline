@@ -1,0 +1,107 @@
+﻿#bodyId {
+    background-color: #95cefd;
+}
+
+.main-footer {
+    background-color: #f8f8f8;
+    height: 50px;
+    margin-top: 20px;
+}
+
+.footer-content{
+    margin-top: 10%;
+}
+
+.menu-logo{
+    height: 110px;
+    width: 120px;
+    margin-right: 10px;
+}
+
+.main-content {
+    height: 100%;
+    margin-bottom: -50px;
+    margin-top: -50px;
+}
+
+#content-background {
+    background-color: #f8f8f8 !important;
+    border-radius: 20px 20px;
+    border: solid 2px #8a8c94;
+    min-height: 85vh;
+    padding: 20px;
+}
+
+.content-elements-border {
+    border: solid 2px #8a8c94;
+    border-radius: 10px 10px;
+}
+
+.content-element-background {
+    background-color: #95cefd;
+}
+
+.home-idenx-element-padding{
+    padding: 20px;
+}
+
+.table-element-padding {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.table-element-margin {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.table-element-row-margin {
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+
+.area-element-margin {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.list-margin {
+    margin-bottom: 10px
+}
+
+.height-500px 
+{
+    height: 500px;
+}
+
+.height-300px {
+    height: 300px;
+}
+
+.element-list-background {
+    background-color: #f8f8f8;
+}
+
+.add-vertical-scroll {
+    overflow-y: scroll;
+}
+
+.remove-resize{
+    resize: none;
+}
+
+.text-output-maggin-padding {
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.text-output {
+    text-align: justify;
+    text-indent: 30px;
+} 
+
+.button-margin-top{
+    margin-top: 22px;
+}

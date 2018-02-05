@@ -1,0 +1,19 @@
+﻿@model Airline.AppLogic.Dto.UserDto
+@using Airline.Web.Models
+
+<div class="content-elements-border content-element-background">
+    @Html.Partial("UpdateFirstName", new FirstOrSecondNameModel() { Id = Model.Id })
+    @Html.Partial("UpdateSecondName", new FirstOrSecondNameModel() { Id = Model.Id })
+    @Html.Partial("UpdateBirthDateModel", new BirthDateModel() { Id = Model.Id })
+    @Html.Partial("UpdatePhoneNumber", new PhoneNumberModel() { Id = Model.Id })
+    @Html.Partial("UpdateEmail", new EmailModel() { Id = Model.Id })
+
+    @if (User.IsInRole("Administrator"))
+    {
+        @Html.Partial("UpdatePassword", new PasswordModel() { Id = Model.Id })
+    }
+    else
+    {
+        @Html.Partial("ChangePassword", new ChangePasswordModel() { Id = Model.Id })
+    }
+</div>

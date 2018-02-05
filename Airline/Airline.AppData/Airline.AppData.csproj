@@ -31,16 +31,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -58,16 +55,16 @@
     <Compile Include="EF\Configuration\AircrewMemberConfiguration.cs" />
     <Compile Include="EF\Configuration\AppUserConfiguration.cs" />
     <Compile Include="EF\Configuration\CityConfiguration.cs" />
-    <Compile Include="EF\Configuration\ConfirmationRequestConfiguration.cs" />
     <Compile Include="EF\Configuration\FlightConfiguration.cs" />
     <Compile Include="EF\Configuration\FlightPointConfiguration.cs" />
     <Compile Include="EF\Configuration\FlightRequestConfiguration.cs" />
     <Compile Include="EF\Configuration\ProfessionConfiguration.cs" />
+    <Compile Include="EF\Configuration\AppRoleConfiguraton.cs" />
     <Compile Include="EF\Configuration\SendReceiveBrokerConfiguration.cs" />
     <Compile Include="Model\AircrewMember.cs" />
+    <Compile Include="Model\AppRole.cs" />
     <Compile Include="Model\AppUser.cs" />
     <Compile Include="Model\City.cs" />
-    <Compile Include="Model\ConfirmationRequest.cs" />
     <Compile Include="Model\Direction.cs" />
     <Compile Include="Model\Entity.cs" />
     <Compile Include="Model\Flight.cs" />
@@ -76,6 +73,24 @@
     <Compile Include="Model\Profession.cs" />
     <Compile Include="Model\SendReceiveBroker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\AppUserStore.cs" />
+    <Compile Include="Repository\IDbRepository.cs" />
+    <Compile Include="Repository\IFlightRepository.cs" />
+    <Compile Include="Repository\IAircrewMemberRepository.cs" />
+    <Compile Include="Repository\IBaseRepository.cs" />
+    <Compile Include="Repository\ICityRepository.cs" />
+    <Compile Include="Repository\IFlightRequestRepository.cs" />
+    <Compile Include="Repository\Implementation\AircrewMemberReository.cs" />
+    <Compile Include="Repository\Implementation\BaseRepository.cs" />
+    <Compile Include="Repository\Implementation\CityRepository.cs" />
+    <Compile Include="Repository\Implementation\DbRepository.cs" />
+    <Compile Include="Repository\Implementation\FlightRepository.cs" />
+    <Compile Include="Repository\Implementation\FlightRequestRepository.cs" />
+    <Compile Include="Repository\Implementation\ProfessionRepository.cs" />
+    <Compile Include="Repository\Implementation\UserRepository.cs" />
+    <Compile Include="Repository\IProfessionRepository.cs" />
+    <Compile Include="Repository\IUserPersonalDataStore.cs" />
+    <Compile Include="Repository\IUserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -1,0 +1,26 @@
+﻿@model Airline.Web.Areas.FlightControl.Models.FlightRequestModel
+
+@{
+    var from = User.Identity.Name;
+    var d = Model;
+}
+
+@using (Html.BeginForm("SendRequest", "FlightRequests", new { area = "FlightControl" }, FormMethod.Post, null))
+{
+    @Html.HiddenFor(x => x.From, new { Value = from })
+    <div class="row form-group">
+        <div class="col-md-6">
+            <span>@Html.ValidationSummary(false, null , new { id = "flightRequestMessageId", @class = "text-left" }) @ViewBag.Submit</span>
+        </div>
+        <div class="col-md-6 form-inline text-right">
+        @Html.Label("To :")
+        @Html.TextBoxFor(x => x.To, null, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.TextAreaFor(x => x.Message, new { @class = "form-control remove-resize", rows = "15" })
+    </div>
+    <div class="form-group text-right">
+        <input type="submit" value="Send" class="btn btn-info" />
+    </div>
+}

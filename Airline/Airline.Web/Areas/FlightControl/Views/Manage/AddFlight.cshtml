@@ -1,0 +1,34 @@
+﻿@model Airline.Web.Areas.FlightControl.Models.FlightCreateUpdateModel
+
+@{
+    ViewBag.Title = "Add flight";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var loadMembersFromCity = Model.FlightDataModel != null ? Model.FlightDataModel.FromCity.ToString() : Model.Cities.First().Id.ToString();
+}
+
+<div class="col-md-1"></div>
+<div class="col-md-10">
+    <div class="row">
+        <div class="col-md-12 text-center list-margin">
+            <span class="h3">Form of adding a new flight</span>
+        </div>
+        <div class="col-md-12 text-right list-margin">
+            @using (Ajax.BeginForm("AvailableAircrewMembers", "Manage", new { area = "FlightControl" }, new AjaxOptions { HttpMethod = "Post", OnSuccess = "loadAvailableAircrewMembers" }, null))
+            {
+                @Html.Hidden("targetId", loadMembersFromCity, new { id = "targetId" })
+                <input type="submit" value="Load available aircrew members" class="btn btn-info" />
+            }
+        </div>
+    </div>
+    <div class="content-elements-border home-idenx-element-padding">
+        @using (Html.BeginForm("AddFlight", "Manage", new { area = "FlightControl" }, FormMethod.Post, new { onsubmit = "selectAll(this)" }))
+        {
+            @Html.Partial("FlightCreateUpdateForm", Model);
+            <div class="text-right">
+                <input type="submit" value="Crete flight" class="btn btn-info" />
+            </div>
+        }
+    </div>
+</div>
+<div class="col-md-1"></div>

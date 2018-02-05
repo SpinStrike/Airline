@@ -1,0 +1,18 @@
+﻿@model Airline.AppLogic.Dto.UserDto
+
+@{
+    ViewBag.Title = "User Information";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-7">
+        @Html.Partial("GeneralUserInformation", Model)
+    </div>
+    <div class="col-md-5">
+        @Html.Partial("GeneralUserDataUpdate", Model)
+    </div>
+</div>
+
+
+
