@@ -3,6 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Airline.Web.Attributes.Validation
 {
+    /// <summary>
+    /// Validate user born date. User must be between 20 - 50 years old.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Property)]
     public class ConfirmMemberAgeAttribute : ValidationAttribute
     {
         public ConfirmMemberAgeAttribute()

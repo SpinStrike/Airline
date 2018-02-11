@@ -4,53 +4,69 @@ using System.Linq;
 using Airline.AppData.Model;
 using Airline.AppData.Repository;
 using Airline.AppLogic.Dto;
+using Airline.AppLogic.Logging;
 
 namespace Airline.AppLogic.Service.Implementation
 {
     /// <summary>
-    /// Represent features and tools to work with flights data
+    /// Represent implementation of functionality to work with flights.
     /// </summary>
     public class FlightService : IFlightService
     {
         /// <summary>
         /// Flight service constructor
         /// </summary>
+        /// 
         public FlightService(IFlightRepository flightRepository,
             IAircrewMemberRepository aircrewMemberRepository,
-            ICityRepository cityRepository)
+            ICityRepository cityRepository,
+            IServiceLogger logger)
         {
             _flightRepository = flightRepository;
             _aircrewMemberRepository = aircrewMemberRepository;
             _cityRepository = cityRepository;
+            _logger = logger;
         }
 
         /// <summary>
-        /// Create new flight
+        /// Create ne flight. 
         /// </summary>
+        /// <param name="flight">flight data.</param>
+        /// <returns>Service answer that contain success/failure execution and error list of method.</returns>
         public ServiceAnswer Crete(FlightDto flight)
         {
             var result = new ServiceAnswer() { Status = AnswerStatus.Success };
+
+            _logger.Debug("Start create new flight method.");
 
             try
             {
                 if (!CheckNumber(result, flight.Number))
                 {
+                    _logger.Debug("Finish create new flight method.");
+
                     return result;
                 };
 
                 if (!CheckDate(result, flight.DepartureDate, flight.ArrivalDate))
                 {
+                    _logger.Debug("Finish create new flight method.");
+
                     return result;
                 };
 
                 if (!CheckExistencePilot(result, flight.AircrewMembers.Select(x => x.Id)))
                 {
+                    _logger.Debug("Finish create new flight method.");
+
                     return result;
                 }
 
                 var cities = GetCities(result, flight.From.Id, flight.To.Id);
                 if (cities.Count() == 0)
                 {
+                    _logger.Debug("Finish create new flight method.");
+
                     return result;
                 };
 
@@ -67,6 +83,9 @@ namespace Airline.AppLogic.Service.Implementation
                 if (!SetAircrew(result, newFligth, flight.AircrewMembers.Select(x => x.Id)))
                 {
                     _flightRepository.RollBack();
+
+                    _logger.Debug("Finish create new flight method.");
+
                     return result;
                 }
 
@@ -74,14 +93,22 @@ namespace Airline.AppLogic.Service.Implementation
 
                 result.Status = AnswerStatus.Success;
 
+                _logger.Info($"Added new flight.\r\n {newFligth.ToString()}");
+                _logger.Debug("Finish create new flight method.");
+
                 return result;
             }
             catch (Exception exc)
             {
                 _flightRepository.RollBack();
+
+                _logger.Error($"Exception occurred during the addition of a new flight.\r\n Exception: {exc.ToString()}");
+
                 result.Status = AnswerStatus.Failure;
                 result.Errors.Add("Service error", "Some trouble with getting data. Try Later.");
             }
+
+            _logger.Debug("Finish create new flight method.");
 
             return result;
         }
@@ -89,14 +116,17 @@ namespace Airline.AppLogic.Service.Implementation
         /// <summary>
         /// Delete selected flight 
         /// </summary>
+        /// <param name="id">Flight identifier.</param>
+        /// <returns>Service answer that contain success/failure execution and error list of method.</returns>
         public ServiceAnswer Delete(Guid id)
         {
             var result = new ServiceAnswer();
 
+            _logger.Debug("Start delete flight method.");
+
             try
             {
-                var targetFlight = _flightRepository.FindById(id); ;
-
+                var targetFlight = _flightRepository.FindById(id); 
                 if (targetFlight != null)
                 {
                     _flightRepository.StartTransaction();
@@ -110,28 +140,41 @@ namespace Airline.AppLogic.Service.Implementation
 
                     result.Status = AnswerStatus.Success;
 
+                    _logger.Info($"Flight with id: {id}, has been deleted.");
+
                     return result;
                 }
 
                 result.Status = AnswerStatus.Failure;
                 result.Errors.Add("Finding error", "Flight is not found.");
+
+                _logger.Warning($"Flight (id: {id}) was not found.");
             }
             catch (Exception exc)
             {
                 _flightRepository.RollBack();
+
+                _logger.Error($"Exception occurred during the deletting of a  flight, id: {id}.\r\n Exception: {exc.ToString()}");
+
                 result.Status = AnswerStatus.Failure;
                 result.Errors.Add("Service error", "Some trouble with getting data. Try Later.");
             }
+
+            _logger.Debug("Finish delete flight method.");
 
             return result;
         }
 
         /// <summary>
-        /// Find flight by id
+        /// Find flight by id.
         /// </summary>
+        /// <param name="id">Flight identifier.</param>
+        /// <returns>Service result that contain result(found flight) success/failure execution and error list of method.</returns>
         public ServiceResult<FlightDto> FindById(Guid id)
         {
             var result = new ServiceResult<FlightDto>();
+
+            _logger.Debug("Start find flight by id method.");
 
             try
             {
@@ -139,22 +182,38 @@ namespace Airline.AppLogic.Service.Implementation
 
                 result.Result = targetFlight.ToDto();
                 result.Status = AnswerStatus.Success;
+
+                if (targetFlight != null)
+                {
+                   _logger.Info($"Flight (Id : {id}) was found.");
+                }
+                else
+                {
+                  _logger.Warning($"Flight (Id : {id}) was not found.");
+                }
             }
             catch (Exception exc)
             {
+                _logger.Error($"Exception occurred during the finding of a flight, id: {id}.\r\n Exception: {exc.ToString()}");
+
                 result.Status = AnswerStatus.Failure;
                 result.Errors.Add("Service error", "Some trouble with getting data. Try Later.");
             }
+
+            _logger.Debug("Finish find flight by id method.");
 
             return result;
         }
 
         /// <summary>
-        /// Get list of all flights
+        /// Get list of all flights.
         /// </summary>
+        /// <returns>Service result that contain result(found flights) success/failure execution and error list of method.</returns>
         public ServiceResult<IEnumerable<FlightDto>> GetAll()
         {
             var result = new ServiceResult<IEnumerable<FlightDto>>();
+
+            _logger.Debug("Start get all flights method.");
 
             try
             {
@@ -162,26 +221,39 @@ namespace Airline.AppLogic.Service.Implementation
 
                 result.Result = targetFlights.Select(x => x.ToDto(false));
                 result.Status = AnswerStatus.Success;
+
+                _logger.Info($"Was found {targetFlights.Count()} flights.");
             }
             catch (Exception exc)
             {
+                _logger.Error($"Exception occurred during the getting a list of all flights.\r\n Exception: {exc.ToString()}");
+
                 result.Result = new List<FlightDto>();
                 result.Status = AnswerStatus.Failure;
                 result.Errors.Add("Service error", "Some trouble with getting data. Try Later.");
             }
 
+            _logger.Debug("Finish get all flights method.");
+
             return result;
         }
 
         /// <summary>
-        /// Get list of flights by selected parameters (departure city and date. arrival city and date)
+        /// Get list of flights by selected parameters (departure city and date. arrival city and date).
         /// </summary>
+        /// <param name="fromCityId">From city identifier.</param>
+        /// <param name="toCityId">To city identifier.</param>
+        /// <param name="departDate">Departure date.</param>
+        /// <param name="arriveDate">Arrival date.</param>
+        /// <returns>Service result that contain result(found flights) success/failure execution and error list of method.</returns>
         public ServiceResult<IEnumerable<FlightDto>> GetFilteredList(Guid? fromCityId,
             Guid? toCityId,
             DateTime? departDate,
             DateTime? arriveDate)
         {
             var result = new ServiceResult<IEnumerable<FlightDto>>();
+
+           _logger.Debug("Start get filterd list of flights method.");
 
             try
             {
@@ -208,28 +280,38 @@ namespace Airline.AppLogic.Service.Implementation
                 }
 
                 result.Result = targetFlights.ToList()
-                    .OrderByDescending(x => x.DepartureDate)
+                    //.OrderByDescending(x => x.DepartureDate)
                     .Select(x => x.ToDto(false));
 
                 result.Status = AnswerStatus.Success;
+
+                _logger.Info($"Was found {result.Result.Count()} flights.");
             }
             catch (Exception exc)
             {
+                _logger.Error($"Exception occurred during the getting a list of flights by parameters.\r\n Exception: {exc.ToString()}");
+
                 result.Result = new List<FlightDto>();
                 result.Status = AnswerStatus.Failure;
                 result.Errors.Add("Service error", "Some trouble with getting data. Try Later.");
             }
 
+           _logger.Debug("Finish get filterd list of flights method.");
+
             return result;
         }
 
         /// <summary>
-        /// Finde flight by number
+        /// Finde flight by number.
         /// </summary>
+        /// <param name="flightNumber">Flight number.</param>
+        /// <returns>Service result that contain result(found flights) success/failure execution and error list of method.</returns>
         public ServiceResult<IEnumerable<FlightDto>> FindByNumber(string flightNumber)
         {
             var result = new ServiceResult<IEnumerable<FlightDto>>();
             result.Result = new List<FlightDto>();
+
+            _logger.Debug("Start find flights by number method.");
 
             try
             {
@@ -237,6 +319,11 @@ namespace Airline.AppLogic.Service.Implementation
                 {
                     result.Status = AnswerStatus.Failure;
                     result.Errors.Add("Number error", "Value of flight number is empty ot null");
+
+                    _logger.Warning("Property flight number is empty or null.");
+                    _logger.Debug("Finish find flights by number method.");
+
+                    return result;
                 }
 
                 var targetFlight = _flightRepository.FindByNumber(flightNumber);
@@ -245,32 +332,48 @@ namespace Airline.AppLogic.Service.Implementation
                     (result.Result as IList<FlightDto>).Add(targetFlight.ToDto(false));
                     result.Status = AnswerStatus.Success;
 
+                    _logger.Info($"Was found {result.Result.Count()} floghts.");
+
                     return result;
                 }
-
-                result.Status = AnswerStatus.Failure;
-                result.Errors.Add("Finding error", "Flight is not found");
+                //else
+                //{
+                //    result.Status = AnswerStatus.Failure;
+                //    result.Errors.Add("Finding error", "Flight is not found");
+                //}
             }
             catch (Exception exc)
             {
+                _logger.Error($"Exception occurred during the getting a list of flights by number.\r\n Exception: {exc.ToString()}");
+
                 result.Status = AnswerStatus.Failure;
                 result.Errors.Add("Service error", "Some trouble with getting data. Try Later.");
             }
+
+            _logger.Debug("Finish find flights by number method.");
 
             return result;
         }
 
         /// <summary>
-        /// Set new status to selected flight
+        /// Set status to selected flight.
         /// </summary>
+        /// <param name="idFlight">Flight identifier.</param>
+        /// <param name="status">Flight status.</param>
+        /// <returns>Service answer that contain success/failure execution and error list of method.</returns>
         public ServiceAnswer SetStatus(Guid idFlight, string status)
         {
             var result = new ServiceAnswer();
+
+            _logger.Debug("Start set flight status method.");
 
             if (!GetAvailableStatuses().Result.Contains(status) || status == null)
             {
                 result.Status = AnswerStatus.Failure;
                 result.Errors.Add("Argument error", "Invalid value of status.");
+
+                _logger.Warning($"Parametr status is invalid (value: {status??"empty"} ).");
+                _logger.Debug("Finish set flight status method.");
 
                 return result;
             }
@@ -278,7 +381,6 @@ namespace Airline.AppLogic.Service.Implementation
             try
             {
                 var targetFlight = _flightRepository.FindById(idFlight); ;
-
                 if (targetFlight != null)
                 {
                     _flightRepository.StartTransaction();
@@ -292,26 +394,37 @@ namespace Airline.AppLogic.Service.Implementation
 
                     result.Status = AnswerStatus.Success;
 
+                    _logger.Info($"To flight (id: {idFlight}) has been set new status '{status}'");
+                    _logger.Debug("Finish set flight status method.");
+
                     return result;
                 }
 
                 result.Status = AnswerStatus.Failure;
                 result.Errors.Add("Finding error", "Flight is not found.");
 
+                _logger.Warning($"Flight (id: {idFlight}) was not found.");
             }
             catch (Exception exc)
             {
                 _flightRepository.RollBack();
+
+                _logger.Error($"Exception occurred during the setting new status of flight, id: {idFlight} status: {status}.\r\n Exception: {exc.ToString()}");
+
                 result.Status = AnswerStatus.Failure;
                 result.Errors.Add("Service error", "Some trouble with getting data. Try Later.");
             }
 
+            _logger.Debug("Finish set flight status method.");
+
             return result;
         }
-        
+
         /// <summary>
-        /// Get set of available statuses to selectet flight 
+        /// Get set of available statuses to selected flight.
         /// </summary>
+        /// <param name="flight">Flight identifier</param>
+        /// <returns>Service result that contain result(available statuses) success/failure execution and error list of method.</returns>
         public ServiceResult<IEnumerable<string>> GetAvailableStatuses(FlightDto flight = null)
         {
             var result = new ServiceResult<IEnumerable<string>>()
@@ -373,19 +486,25 @@ namespace Airline.AppLogic.Service.Implementation
         }
 
         /// <summary>
-        /// Convert string to flight status
+        /// Convert string status to enum flight status variable.
         /// </summary>
+        /// <param name="status">Flight status (as string)</param>
+        /// <returns>Flight status variable.</returns>
         public FlightStatus Status(string status)
         {
             return GetEnumStatus(status, FlightStatus.Preparing);
         }
 
         /// <summary>
-        /// Update existing flight
+        /// Update existing flight.
         /// </summary>
-         public ServiceAnswer UpdateFlight(FlightDto updatedFlight)
+        /// <param name="updatedFlight">New flight data.</param>
+        /// <returns>Service answer that contain success/failure execution and error list of method.</returns>
+        public ServiceAnswer UpdateFlight(FlightDto updatedFlight)
         {
             var result = new ServiceAnswer() { Status = AnswerStatus.Success };
+
+            _logger.Debug("Start update flight method.");
 
             try
             {
@@ -396,22 +515,30 @@ namespace Airline.AppLogic.Service.Implementation
                     { }
                     else if (!CheckNumber(result, updatedFlight.Number))
                     {
+                        _logger.Debug("Finidh update flight method.");
+
                         return result;
                     };
               
                     if (!CheckDate(result, updatedFlight.DepartureDate, updatedFlight.ArrivalDate, false))
                     {
+                        _logger.Debug("Finidh update flight method.");
+
                         return result;
                     };
           
                     if (!CheckExistencePilot(result, updatedFlight.AircrewMembers.Select(x => x.Id)))
                     {
+                        _logger.Debug("Finidh update flight method.");
+
                         return result;
                     }
 
                     var cities = GetCities(result, updatedFlight.From.Id, updatedFlight.To.Id);
                     if (cities.Count() == 0)
                     {
+                        _logger.Debug("Finidh update flight method.");
+
                         return result;
                     };
 
@@ -422,6 +549,9 @@ namespace Airline.AppLogic.Service.Implementation
                     if (!SetAircrew(result, originalFlight, updatedFlight.AircrewMembers.Select(x => x.Id)))
                     {
                         _flightRepository.RollBack();
+
+                        _logger.Debug("Finidh update flight method.");
+
                         return result;
                     }
 
@@ -431,25 +561,38 @@ namespace Airline.AppLogic.Service.Implementation
 
                     result.Status = AnswerStatus.Success;
 
+                    _logger.Info($"Flight have been updated.\r\n {originalFlight.ToString()}");
+                    _logger.Debug("Finidh update flight method.");
+
                     return result;
                 }
 
                 result.Status = AnswerStatus.Failure;
                 result.Errors.Add("Finding error", "Flight is not found.");
+
+                _logger.Warning($"Flight (id: {updatedFlight.Id}) was not found.");
             }
             catch (Exception exc)
             {
                 _flightRepository.RollBack();
+
+                _logger.Error($"Exception occurred during the update of a flight, id: {updatedFlight.Id}.\r\n Exception: {exc.ToString()}");
+
                 result.Status = AnswerStatus.Failure;
                 result.Errors.Add("Service error", "Some trouble with getting data. Try Later.");
             }
+
+            _logger.Debug("Finidh update flight method.");
 
             return result;
         }
 
         /// <summary>
-        ///  Check flight number. It must be unique and isn't empty
+        /// Check flight number. It must be unique and isn't empty.
         /// </summary>
+        /// <param name="result">Service answer, need for creation chain of checks.</param>
+        /// <param name="Number">Flight number.</param>
+        /// <returns>Boolean result of cheking.</returns>
         private bool CheckNumber(ServiceAnswer result, string Number)
         {
             if(result.Status == AnswerStatus.Failure)
@@ -462,6 +605,8 @@ namespace Airline.AppLogic.Service.Implementation
                 result.Status = AnswerStatus.Failure;
                 result.Errors.Add("Number error", "Flight number empty or null.");
 
+                _logger.Warning("Flight number is empty");
+
                 return false;
             }
 
@@ -471,6 +616,8 @@ namespace Airline.AppLogic.Service.Implementation
                 result.Status = AnswerStatus.Failure;
                 result.Errors.Add("Number error", "Flight number is not uniqe.");
 
+                _logger.Warning($"Flight number '{Number}' is not uniqe");
+
                 return false;
             }
 
@@ -478,8 +625,13 @@ namespace Airline.AppLogic.Service.Implementation
         }
 
         /// <summary>
-        /// Check correct of departure and arrival date. Departure date must be before arrival
+        /// Check correct of departure and arrival date. Departure date must be before arrival.
         /// </summary>
+        /// <param name="result">Service answer, need for creation chain of checks.</param>
+        /// <param name="departureDate">Departure date.</param>
+        /// <param name="arrivalDate">Arival date.</param>
+        /// <param name="isCheckDepartureAfterCurrent">Is add condition to check departure date. It must be after current.</param>
+        /// <returns>Boolean result of cheking.</returns>
         private bool CheckDate(ServiceAnswer result, DateTime departureDate, DateTime arrivalDate, bool isCheckDepartureAfterCurrent = true)
         {
             if (result.Status == AnswerStatus.Failure)
@@ -500,6 +652,8 @@ namespace Airline.AppLogic.Service.Implementation
                 result.Status = AnswerStatus.Failure;
                 result.Errors.Add("Date error", "Departure or arrival date is not valid.");
 
+                _logger.Warning($"Departure or arrival date is not valid (dep. date: {departureDate.Date.ToString("dd-MM-yyyy")}, arriv. date {arrivalDate.Date.ToString("dd-MM-yyyy")})");
+
                 return false;
             }
 
@@ -507,8 +661,12 @@ namespace Airline.AppLogic.Service.Implementation
         }
 
         /// <summary>
-        /// Check existing at system and return required cities 
+        /// Check at not equality and  existing at system required cities. Return found cities. 
         /// </summary>
+        /// <param name="result">Service answer, need for creation chain of checks.</param>
+        /// <param name="idFromCity">From city identifier.</param>
+        /// <param name="idToCity">To city identifier.</param>
+        /// <returns>Boolean result of cheking.</returns>
         private IEnumerable<City>GetCities(ServiceAnswer result, Guid idFromCity, Guid idToCity)
         {
             if (result.Status == AnswerStatus.Failure)
@@ -520,7 +678,9 @@ namespace Airline.AppLogic.Service.Implementation
             if (cities.Count() != 2)
             {
                 result.Status = AnswerStatus.Failure;
-                result.Errors.Add("City error", "One of the cities is not found or you selected one same city twice. ");
+                result.Errors.Add("City error", "One of the cities is not found or you selected one same city twice.");
+
+                _logger.Warning($"One of the cities is not found or one same city twice. Cities id:\r\n {idFromCity}\r\n {idToCity}");
 
                 return new List<City>();
             }
@@ -529,8 +689,11 @@ namespace Airline.AppLogic.Service.Implementation
         }
 
         /// <summary>
-        /// Check that flight aircrew contain least one pilot
+        /// Check that flight aircrew contain least one pilot.
         /// </summary>
+        /// <param name="result">Service answer, need for creation chain of checks.</param>
+        /// <param name="members">List of aircrew members identifiers.</param>
+        /// <returns>Boolean result of cheking.</returns>
         private bool CheckExistencePilot(ServiceAnswer result, IEnumerable<Guid> members)
         {
             if (result.Status == AnswerStatus.Failure)
@@ -538,15 +701,26 @@ namespace Airline.AppLogic.Service.Implementation
                 return false;
             }
 
-            var pilots = _aircrewMemberRepository.GetAll()
-                .Where(x => x.Profession.Name == "Pilot")
-                .Where(x => members.Contains(x.Id))
-                .Count();
-
-            if (pilots == 0)
+            try
             {
-                result.Status = AnswerStatus.Failure;
-                result.Errors.Add("Pilot error", "In aircrew is no one pilot.");
+                var pilots = _aircrewMemberRepository.GetAll()
+                    .Where(x => x.Profession.Name == "Pilot")
+                    .Where(x => members.Contains(x.Id))
+                    .Count();
+
+                if (pilots == 0)
+                {
+                    result.Status = AnswerStatus.Failure;
+                    result.Errors.Add("Pilot error", "In aircrew is no one pilot.");
+
+                    _logger.Warning("Pilot was not found.");
+
+                    return false;
+                }
+            }
+            catch (Exception exc)
+            {
+                _logger.Error($"Exception occurred during the checking the pilot in aircrew.\r\n Exception: {exc.ToString()}");
 
                 return false;
             }
@@ -555,8 +729,12 @@ namespace Airline.AppLogic.Service.Implementation
         }
 
         /// <summary>
-        /// Set new or edit existing aircrew of flight 
+        /// Set new or edit existing aircrew of flight.
         /// </summary>
+        /// <param name="result">Service answer, need for creation chain of checks.</param>
+        /// <param name="flight">Flight that updating.</param>
+        /// <param name="members">List of aircrew members identifiers.</param>
+        /// <returns>Boolean result of success setting new aircrew.</returns>
         private bool SetAircrew(ServiceAnswer result, Flight flight, IEnumerable<Guid> members)
         {
             if (result.Status == AnswerStatus.Failure)
@@ -566,28 +744,41 @@ namespace Airline.AppLogic.Service.Implementation
 
             var newMembers = GetNewMembers(flight, members);
 
-            var aircrewMembers = _aircrewMemberRepository.GetAll()
-                .Where(x => x.Status == AircrewMemberStatus.Available)
-                .Where(x => newMembers.Contains(x.Id))
-                .ToList();
+            try {
+                var aircrewMembers = _aircrewMemberRepository.GetAll()
+                    .Where(x => x.Status == AircrewMemberStatus.Available)
+                    .Where(x => newMembers.Contains(x.Id))
+                    .ToList();
 
-            if (newMembers.Count() != aircrewMembers.Count())
+                if (newMembers.Count() != aircrewMembers.Count())
+                {
+                    result.Status = AnswerStatus.Failure;
+                    result.Errors.Add("Finding error", "Some of the aircrew member are not found or unawailable.");
+
+                     _logger.Warning("Not all new aircrew was find in system.");
+
+                    return false;
+                }
+
+                _flightRepository.AddAircrewMembers(flight, aircrewMembers);
+                ManageAircrewByStatus(flight);
+
+            } catch (Exception exc)
             {
-                result.Status = AnswerStatus.Failure;
-                result.Errors.Add("Finding error", "Some of the aircrew member are not found or unawailable.");
+                _logger.Error($"Exception occurred during the changing new aircrew.\r\n Exception: {exc.ToString()}");
 
                 return false;
             }
-
-            _flightRepository.AddAircrewMembers(flight, aircrewMembers);
-            ManageAircrewByStatus(flight);
 
             return true;
         }
 
         /// <summary>
-        /// Set new flight data without aircrew members
+        /// Set new flight data without aircrew members.
         /// </summary>
+        /// <param name="flight">Flight that updating.</param>
+        /// <param name="updatedFlight">New flight data.</param>
+        /// <param name="cityes">Cities identifiers.</param>
         private void SetFlightData(Flight flight, FlightDto updatedFlight , IEnumerable<City> cityes)
         {
             var fromCity = cityes.First(x => x.Id == updatedFlight.From.Id);
@@ -609,8 +800,11 @@ namespace Airline.AppLogic.Service.Implementation
         }
 
         /// <summary>
-        /// Return string value of flight status
+        /// Return enum flight status variable  of flight status.
         /// </summary>
+        /// <param name="status">Flight status (as string)</param>
+        /// <param name="currentStatus">Flight current status</param>
+        /// <returns>Enum flight status variable.</returns>
         private FlightStatus GetEnumStatus(string status, FlightStatus currentStatus)
         {
             switch (status)
@@ -629,8 +823,11 @@ namespace Airline.AppLogic.Service.Implementation
         }
 
         /// <summary>
-        /// Select new aircrew members and delete old that not required
+        /// Select new aircrew members and delete old that are not required.
         /// </summary>
+        /// <param name="flight">light that updating.</param>
+        /// <param name="newAircrewMembers">List of new aircrew memberes identifiers.</param>
+        /// <returns>List of new aircrew members identifiers.</returns>
         private IEnumerable<Guid> GetNewMembers(Flight flight, IEnumerable<Guid> newAircrewMembers)
         {
             var toDelete = flight.Aircrew.Where(x => !newAircrewMembers.Contains(x.Id)).ToList();
@@ -651,8 +848,10 @@ namespace Airline.AppLogic.Service.Implementation
         }
 
         /// <summary>
-        /// Set for all flight aircrew members required logic status 
+        /// Set for all flight aircrew members required aircrew member status. 
         /// </summary>
+        /// <param name="flight">Flight that updating.</param>
+        /// <param name="isDisband">Is remove aircrew from flight with ignoring flight status.</param>
         private void ManageAircrewByStatus(Flight flight, bool isDisband = false)
         {
             AircrewMemberStatus requredStatus;
@@ -688,8 +887,10 @@ namespace Airline.AppLogic.Service.Implementation
         }
 
         /// <summary>
-        /// Delete users from flight if it needed or if it is needed by app logic (for required status) 
+        /// Delete users from flight if it needed or if it is needed by app logic (for required status).
         /// </summary>
+        /// <param name="flight">Flight that updating.</param>
+        /// <param name="isDisbaned">Is remove aircrew from flight with ignoring flight status.</param>
         private void SaveOrDisbandAircrew(Flight flight, bool isDisbaned = false)
         {
             if (flight.Status == FlightStatus.Landed || flight.Status == FlightStatus.Cancelled || isDisbaned)
@@ -701,5 +902,6 @@ namespace Airline.AppLogic.Service.Implementation
         private IFlightRepository _flightRepository;
         private IAircrewMemberRepository _aircrewMemberRepository;
         private ICityRepository _cityRepository;
+        private IServiceLogger _logger;
     }
 }

@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace Airline.AppData.Model
 {
+    /// <summary>
+    /// Represet information about flight request from dispacher to administrator and reverce.
+    /// </summary>
     public class FlightRequest : Entity
     {
         public bool IsReaded { get; set; }

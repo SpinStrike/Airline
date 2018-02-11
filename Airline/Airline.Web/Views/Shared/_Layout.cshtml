@@ -25,7 +25,7 @@
                </div>
                <div id="navbar">
                    <ul class="nav navbar-nav">
-                       <li id="selectedId" @*class="active"*@ onclick="selectNavElement(this)">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>
+                       <li id="selectedId" onclick="selectNavElement(this)">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>
                        @if (User.IsInRole("Administrator"))
                        {
                         <li class="dropdown" onclick="selectNavElement(this)">
@@ -41,7 +41,7 @@
                            </ul>
                        </li>
                        }
-                       else if (User.IsInRole("AirTrafficController"))
+                       else if (User.IsInRole("Dispatcher"))
                        {
                         <li class="dropdown" onclick="selectNavElement(this)">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Control Panel<span class="caret"></span></a>
@@ -52,11 +52,10 @@
                             </ul>
                         </li>
                        }
-                       <li onclick="selectNavElement(this)"><a href="#" >About</a></li>
-                       <li onclick="selectNavElement(this)"><a href="#">Contact</a></li">
+                       <li onclick="selectNavElement(this)">@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, null)</li>
                     </ul>
                    <ul class="nav navbar-nav navbar-right">
-                       <li>@Html.ActionLink($"Welcome, {User.Identity.GetFullNameUser()}", "UserInformation", "Account", new { area = "" }, null)</li>
+                       <li onclick="selectNavElement(this)">@Html.ActionLink($"Welcome, {User.Identity.GetFullNameUser()}", "UserInformation", "Account", new { area = "" }, null)</li>
                        <li id="navUser">@Html.ActionLink("Sign Off", "SignOff", "Account", new { area = "" }, null)</li>
                    </ul>
                </div>

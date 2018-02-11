@@ -15,8 +15,8 @@ namespace Airline.AppData.Repository
 
         void SetStatus(IEnumerable<Guid> aircrewMemberIds, AircrewMemberStatus status);
 
-        void SetProfession(Guid aircrewMemberId, Profession profession);
+        void SetProfession(AircrewMember aircrewMember, Profession profession);
 
-        void SetCity(Guid aircrewMemberId, City City);
+        void SetCity(AircrewMember aircrewMember, City City);
     }
 }

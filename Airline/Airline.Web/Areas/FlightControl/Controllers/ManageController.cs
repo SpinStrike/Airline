@@ -23,7 +23,7 @@ namespace Airline.Web.Areas.FlightControl.Controllers
         }
 
         [HttpGet]
-        [AccessByRole("AirTrafficController")]
+        [AccessByRole("Dispatcher")]
         public ActionResult AddFlight()
         {
             var cities = _cityService.GetAll().Result;
@@ -37,7 +37,7 @@ namespace Airline.Web.Areas.FlightControl.Controllers
         }
 
         [HttpPost]
-        [AccessByRole("AirTrafficController")]
+        [AccessByRole("Dispatcher")]
         public ActionResult AddFlight(FlightDataModel flightDataModel)
         {
             if (ModelState.IsValid)
@@ -82,6 +82,9 @@ namespace Airline.Web.Areas.FlightControl.Controllers
             return View("AddFlight", model);
         }
 
+        /// <summary>
+        /// Find available aircrew members by city, current flight and aircrew member status.
+        /// </summary>
         [HttpPost]
         public async Task<JsonResult> AvailableAircrewMembers(Guid? targetId, Guid? flightId = null)
         {
@@ -124,7 +127,7 @@ namespace Airline.Web.Areas.FlightControl.Controllers
 
                 if (result.Status == AnswerStatus.Success)
                 {
-                    return "Status is changed.";
+                    return "Status has been changed.";
                 }
 
                 return result.Errors.First().Value;
@@ -133,6 +136,9 @@ namespace Airline.Web.Areas.FlightControl.Controllers
             return PartialView("ChangedStatusResult", task);
         }
 
+        /// <summary>
+        /// Delete flight. 
+        /// </summary>
         [HttpPost]
         public async Task<JsonResult> DeletPermanentlyFromList(Guid? flightId)
         {
@@ -144,7 +150,7 @@ namespace Airline.Web.Areas.FlightControl.Controllers
             var formatedResult = new List<object>();
             if (task.Status == AnswerStatus.Success)
             {
-                formatedResult.Add(new { Message = "Flight is deleted.", Sucsses = true, Id = flightId.Value });
+                formatedResult.Add(new { Message = "Flight has been deleted.", Sucsses = true, Id = flightId.Value });
             }
             else
             {

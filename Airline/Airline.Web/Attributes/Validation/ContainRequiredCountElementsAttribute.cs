@@ -5,6 +5,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Airline.Web.Attributes.Validation
 {
+    /// <summary>
+    /// Validate enumerable objects. They must contain required count of elements.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Property)]
     public class ContainRequiredCountElementsAttribute : ValidationAttribute
     {
         public ContainRequiredCountElementsAttribute(int requiredCount)

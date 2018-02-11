@@ -18,7 +18,7 @@
                 @Html.ActionLink("Sign in as another user", "SignOff", "Account", new { area = ""},new { @class="btn btn-info"})
             </div>
             <div class=" col-md-6 text-left">
-                <input type="button" value="Get administrator contacts" class="btn btn-info" />
+                @Html.ActionLink("administrators contacts", "Contact", "Home", new { area = "" }, new { @class = "btn btn-info" })
             </div>
         </div>
     </div>

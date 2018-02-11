@@ -2,6 +2,9 @@
 
 namespace Airline.AppData.Model
 {
+    /// <summary>
+    /// Represent information about application role.
+    /// </summary>
     public class AppRole : Entity
     {
         public string Name { get; set; }

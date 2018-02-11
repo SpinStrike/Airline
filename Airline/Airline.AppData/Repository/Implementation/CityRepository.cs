@@ -1,4 +1,6 @@
-﻿using Airline.AppData.Model;
+﻿using System;
+using System.Linq;
+using Airline.AppData.Model;
 
 namespace Airline.AppData.Repository.Implementation
 {
@@ -16,6 +18,11 @@ namespace Airline.AppData.Repository.Implementation
             };
 
             this.Add(city);
+        }
+
+        public override IQueryable<City> GetAll()
+        {
+            return base.GetAll().OrderBy(x => x.Name);
         }
     }
 }

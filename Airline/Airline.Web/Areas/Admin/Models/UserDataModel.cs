@@ -23,7 +23,7 @@ namespace Airline.Web.Areas.Admin.Models
         public DateTime BornDate { get; set; }
 
         [Required(ErrorMessage = "Phone number field can't be empty.")]
-        [RegularExpression(pattern: @"[+]?[0-9]{12,12}$", ErrorMessage = "Invalid phone number.")]
+        [RegularExpression(pattern: @"\+[0-9]{12,12}$", ErrorMessage = "Invalid phone number.")]
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Email field can't be empty.")]

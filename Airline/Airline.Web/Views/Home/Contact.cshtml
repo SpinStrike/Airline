@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Airline.AppLogic.Dto.UserDto>
+
+@{
+    ViewBag.Title = "Contact";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12 text-center">
+        <img src="~/Images/falcon_logo.png" alt="falcon_logo" />
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-8 text-center table-element-margin">
+        <span class="h5">If you have some question or offers, you can contact with administrators. Contact information of the available administrators here:</span>
+    </div>
+    <div class="col-md-2"></div>
+
+  
+    <div class="col-md-12 table-element-margin">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <div class=" col-md-4 text-center table-element-margin">
+                    <span>Full name</span>
+                </div>
+                <div class=" col-md-4 text-center table-element-margin">
+                    <span>E-mail</span>
+                </div>
+                <div class=" col-md-4 text-center table-element-margin">
+                    <span>Phone number</span>
+                </div>
+
+                <div class="table-element-margin">
+                    <hr />
+                </div>
+
+                @foreach (var admin in Model)
+                {
+                    <div class=" col-md-4 text-center">
+                        <span>@admin.FirstName</span>
+
+                        <span>@admin.SecondName</span>
+                    </div>
+                    <div class=" col-md-4 text-center">
+                        <span>@admin.Email</span>
+                    </div>
+                        <div class=" col-md-4 text-center">
+                            <span>@admin.PhoneNumber</span>
+                        </div>
+                }
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+    </div>
+</div>
+

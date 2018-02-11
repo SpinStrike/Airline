@@ -39,6 +39,9 @@
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -58,11 +61,14 @@
     <Compile Include="Dto\FlightRequestDto.cs" />
     <Compile Include="Dto\ProfessionDto.cs" />
     <Compile Include="Dto\UserDto.cs" />
+    <Compile Include="Logging\EnumerableExtensions.cs" />
+    <Compile Include="Logging\IServiceLogger.cs" />
+    <Compile Include="Logging\LoggerFactory.cs" />
+    <Compile Include="Logging\ServiceLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\AnswerStatus.cs" />
     <Compile Include="Service\AppClaimIdentityFactory.cs" />
     <Compile Include="Service\AppUserManager.cs" />
-    <Compile Include="Service\AppUserManagerWrapper.cs" />
     <Compile Include="Service\IAircrewMemberService.cs" />
     <Compile Include="Service\IBaseService.cs" />
     <Compile Include="Service\ICityService.cs" />
@@ -83,6 +89,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

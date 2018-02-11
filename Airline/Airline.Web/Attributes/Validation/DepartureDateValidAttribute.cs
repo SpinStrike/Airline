@@ -3,6 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Airline.Web.Attributes.Validation
 {
+    /// <summary>
+    ///  Validate departure date of flight.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Property)]
     public class DepartureDateValidAttribute : ValidationAttribute
     {
         public DepartureDateValidAttribute(string field)

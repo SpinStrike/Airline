@@ -5,10 +5,10 @@ using System.Web;
 using System.Web.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity.Owin;
-using Airline.AppLogic.Service;
 using Airline.Web.AdditionalExtensions;
 using Airline.Web.Areas.FlightControl.Models;
 using Airline.Web.Attributes.Filters;
+using Airline.AppLogic.Service;
 
 namespace Airline.Web.Areas.FlightControl.Controllers
 {
@@ -20,8 +20,11 @@ namespace Airline.Web.Areas.FlightControl.Controllers
             _flightRequestService = flightRequestService;
         }
 
+        /// <summary>
+        /// Output list of flight requests (answers) sent to user.
+        /// </summary>
         [HttpGet]
-        [AccessByRole("AirTrafficController")]
+        [AccessByRole("Dispatcher")]
         public ActionResult Messages()
         {
             var requests = GenereteRequestList();
@@ -29,8 +32,11 @@ namespace Airline.Web.Areas.FlightControl.Controllers
             return View(requests);
         }
 
+        /// <summary>
+        /// Send flight request to administrator.
+        /// </summary>
         [HttpPost]
-        [AccessByRole("AirTrafficController")]
+        [AccessByRole("Dispatcher")]
         public ActionResult SendRequest(FlightRequestModel flightRequestModel)
         {
             if (ModelState.IsValid)
@@ -42,9 +48,9 @@ namespace Airline.Web.Areas.FlightControl.Controllers
                 {
                     ModelState.AddModelError("To", "Administrator not found.");
                 }
-                else if (!_userManager.IsInRoleAsync(userFrom.Id, "AirTrafficController").Result)
+                else if (!_userManager.IsInRoleAsync(userFrom.Id, "Dispatcher").Result)
                 {
-                    ModelState.AddModelError("From", "Sender is not Air Traffic Controller");
+                    ModelState.AddModelError("From", "Sender is not Dispatcher");
                 }
                 else if (!_userManager.IsInRoleAsync(userTo.Id, "Administrator").Result)
                 {
@@ -73,6 +79,9 @@ namespace Airline.Web.Areas.FlightControl.Controllers
             return View("Messages", requests);
         }
 
+        /// <summary>
+        /// Load flight request from dispatcher to administrator. 
+        /// </summary>
         [HttpPost]
         public async Task<PartialViewResult> LoadRequestToChangeStatus(Guid? id)
         {
@@ -96,6 +105,9 @@ namespace Airline.Web.Areas.FlightControl.Controllers
             return PartialView("AdminRequestView", task);
         }
 
+        /// <summary>
+        /// Load request answer to dispatcher from administrator.
+        /// </summary>
         [HttpPost]
         public async Task<PartialViewResult> LoadRequestAnswer(Guid? id)
         {
@@ -119,6 +131,9 @@ namespace Airline.Web.Areas.FlightControl.Controllers
             return PartialView("AdminAnswer", task);
         }
 
+        /// <summary>
+        /// Send administrator answer to dispatcher flight request.
+        /// </summary>
         [HttpPost]
         public async Task<JsonResult> AdminFlightAnswer(Guid? requestId, bool isCompleted)
         {
@@ -134,6 +149,9 @@ namespace Airline.Web.Areas.FlightControl.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Delete flight request (answer) from loaded list.
+        /// </summary>
         [HttpPost]
         public async Task<JsonResult> DeleteRequest(Guid? requestId)
         {
@@ -149,8 +167,11 @@ namespace Airline.Web.Areas.FlightControl.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Render form to write a flight request message.
+        /// </summary>
         [HttpPost]
-        [AccessByRole("AirTrafficController")]
+        [AccessByRole("Dispatcher")]
         public PartialViewResult GenerateRequestForm()
         {
             return PartialView("WriteRequest", new FlightRequestModel());

@@ -7,7 +7,7 @@ namespace Airline.AppData.EF.Configuration
     {
         public AppUserConfiguration()
         {
-            Property(x => x.UserName).IsOptional();
+            Property(x => x.UserName).IsRequired();
             Property(x => x.FirstName).IsRequired();
             Property(x => x.SecondName).IsRequired();          
             Property(x => x.BornDate).IsRequired();

@@ -38,7 +38,8 @@ namespace Airline.AppData.Repository.Implementation
 
         public override IQueryable<Flight> GetAll()
         {
-            var targetFlights = base.GetAll().Include(x => x.Points.Select(y => y.City));
+            var targetFlights = base.GetAll().Include(x => x.Points.Select(y => y.City))
+                .OrderByDescending(x => x.DepartureDate);
 
             return targetFlights;
         }

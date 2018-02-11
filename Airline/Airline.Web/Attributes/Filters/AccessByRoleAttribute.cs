@@ -4,6 +4,9 @@ using System.Web.Routing;
 
 namespace Airline.Web.Attributes.Filters
 {
+    /// <summary>
+    /// Allow access to website resources for user in required or administrator role.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
     public class AccessByRoleAttribute : FilterAttribute, IActionFilter
     {

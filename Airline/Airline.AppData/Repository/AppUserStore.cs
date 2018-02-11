@@ -55,7 +55,7 @@ namespace Airline.AppData.Repository
 
         public Task<AppUser> FindByNameAsync(string userName)
         {
-            var targetUser = GetUserDataSet().FirstOrDefault(x => x.UserName.ToUpper().Equals(userName.ToUpper()));
+            var targetUser = GetUserDataSet().FirstOrDefault(x => x.UserName == userName);
 
             return Task.FromResult(targetUser);
         }
@@ -128,7 +128,7 @@ namespace Airline.AppData.Repository
 
         public Task<AppUser> FindByEmailAsync(string email)
         {
-            var targetUser = GetUserDataSet().FirstOrDefault(x => x.Email.ToUpper().Equals(email.ToUpper()));
+            var targetUser = GetUserDataSet().FirstOrDefault(x => x.Email == email);
 
             return Task.FromResult(targetUser);
         }
@@ -173,7 +173,7 @@ namespace Airline.AppData.Repository
 
         public Task AddToRoleAsync(AppUser user, string roleName)
         {
-            var targetRole = GetRoleDatSet().FirstOrDefault(x => x.Name.ToUpper().Equals(roleName.ToUpper()));
+            var targetRole = GetRoleDatSet().FirstOrDefault(x => x.Name.Equals(roleName));
 
             user.Roles.Add(targetRole);
 
@@ -185,7 +185,7 @@ namespace Airline.AppData.Repository
             var targetUser = GetUserDataSet().Include(x => x.Roles).
                 FirstOrDefault(x => x.Id.Equals(user.Id));
 
-            user.Roles.Remove(user.Roles.FirstOrDefault(x => x.Name.ToUpper().Equals(roleName.ToUpper())));
+            user.Roles.Remove(user.Roles.FirstOrDefault(x => x.Name.Equals(roleName)));
 
             return Task.FromResult(0);
         }
@@ -204,8 +204,8 @@ namespace Airline.AppData.Repository
         {
             var isInRole = GetUserDataSet().Include(x => x.Roles)
                .FirstOrDefault(x => x.Id.Equals(user.Id))
-               .Roles.Select(x => x.Name.ToUpper())
-               .Contains(roleName.ToUpper());
+               .Roles.Select(x => x.Name)
+               .Contains(roleName);
 
             return Task.FromResult(isInRole);
         }

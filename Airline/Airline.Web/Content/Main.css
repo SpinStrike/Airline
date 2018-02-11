@@ -105,3 +105,9 @@
 .button-margin-top{
     margin-top: 22px;
 }
+
+.remove-decoration {
+    text-decoration: none;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}

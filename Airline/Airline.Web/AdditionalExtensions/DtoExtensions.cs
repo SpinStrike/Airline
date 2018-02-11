@@ -7,6 +7,11 @@ namespace Airline.Web.AdditionalExtensions
 {
     public static  class DtoExtensions
     {
+        /// <summary>
+        /// Group by profession and sort into groups by full name flight aircre members.
+        /// </summary>
+        /// <param name="flight">Flight</param>
+        /// <returns></returns>
         public static FlightInformationModel GetStructetFlightDto(this FlightDto flight)
         {
             var model = new FlightInformationModel();
@@ -24,6 +29,9 @@ namespace Airline.Web.AdditionalExtensions
             return model;
         }
 
+        /// <summary>
+        /// Sort professions by flight seniority.
+        /// </summary>
         private class ProfessionComparer : IComparer<string>
         {
             public int Compare(string x, string y)

@@ -3,7 +3,7 @@
 namespace Airline.AppData.Model
 {
     /// <summary>
-    /// This class represent city as entity in application.
+    /// Represent city as entity in application.
     /// </summary>
     public class City : Entity
     {

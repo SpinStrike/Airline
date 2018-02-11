@@ -3,6 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Airline.Web.Attributes.Validation
 {
+    /// <summary>
+    /// Validate date. It must be bigger or equal than current date.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Property)]
     public class MinDateAttribute : ValidationAttribute
     {
         public MinDateAttribute()

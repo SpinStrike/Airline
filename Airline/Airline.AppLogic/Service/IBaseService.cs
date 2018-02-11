@@ -9,10 +9,24 @@ namespace Airline.AppLogic.Service
     /// <typeparam name="T">Service entyty</typeparam>
     public interface IBaseService<T>
     {
+        /// <summary>
+        /// Delete enity by id.
+        /// </summary>
+        /// <param name="id">Entity id.</param>
+        /// <returns></returns>
         ServiceAnswer Delete(Guid id);
 
+        /// <summary>
+        /// Finde entity by id.
+        /// </summary>
+        /// <param name="id">Entity id.</param>
+        /// <returns></returns>
         ServiceResult<T> FindById(Guid id);
 
+        /// <summary>
+        /// Get set of all entities.
+        /// </summary>
+        /// <returns></returns>
         ServiceResult<IEnumerable<T>> GetAll();
     }
 }

@@ -1,14 +1,4 @@
-﻿$(document).ready(function () {
-    $('a[href^="#"]').click(function () {
-        elementClick = $(this).attr("href");
-        destination = $(elementClick).offset().top;
-        $('html').animate({ scrollTop: destination }, 700);
-        return false;
-    });
-});
-
-
-//create user
+﻿//User creation function
 function showHiden(request)
 {
     var area = document.getElementById("hidenVisibleAreaId");
@@ -22,7 +12,7 @@ function showHiden(request)
     }
 }
 
-//menu
+//Top navigation menu function
 function selectNavElement(element)
 {
     var selectedElem = document.getElementById("selectedId");
@@ -34,8 +24,7 @@ function selectNavElement(element)
     element.classList.add("active");
 }
 
-
-//sorting
+//Flight sorting functions
 var isReverceDirectionNumberSorting = false;
 var isReverceDirectionNameSorting = false;
 var sortByElement = 0
@@ -101,8 +90,7 @@ function setRememberProperty(index) {
     }
 }
 
-
-//flight request
+//Flight request functions
 function requestClosedSuccess(data)
 {
     if (data[0].Error == null)
@@ -135,9 +123,7 @@ function deleteRequest(id) {
     deleteButton.remove();
 }
 
-
-//add flight
-
+//Flight addition functions
 function changeCityId(selected) {
     var targetId = selected.value;
     var ajaxHidenField = document.getElementById("targetId");
@@ -245,8 +231,7 @@ function resetAllLists() {
     list.options.length = 0;
 }
 
-
-// flight delete 
+// Flight deleting functions 
 function postFlightDeleting(data)
 {
     var infoArea = document.getElementById("informationArea");
@@ -299,8 +284,7 @@ function flightsListEmpty() {
 
 }
 
-
-//Delete user
+//User deleting function
 function deleUser(data)
 {
     var answerArea = document.getElementById("deleteOperationAnswerId");

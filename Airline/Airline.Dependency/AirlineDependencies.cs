@@ -3,6 +3,7 @@ using Airline.AppData.Repository;
 using Airline.AppData.Repository.Implementation;
 using Airline.AppLogic.Service;
 using Airline.AppLogic.Service.Implementation;
+using Airline.AppLogic.Logging;
 
 namespace Airline.Dependency
 {
@@ -14,18 +15,30 @@ namespace Airline.Dependency
         public override void Load()
         {
             Bind<IDbRepository>().To<DbRepository>().InSingletonScope();
-            Bind<ICityService>().To<CityService>();
             Bind<ICityRepository>().To<CityRepository>();
-            Bind<IProfessionService>().To<ProfessionService>();
             Bind<IProfessionRepository>().To<ProfessionRepository>();
             Bind<IAircrewMemberRepository>().To<AircrewMemberReository>();
-            Bind<IAircrewMemberService>().To<AircrewMemberService>();
             Bind<IFlightRepository>().To<FlightRepository>();
-            Bind<IFlightService>().To<FlightService>();
             Bind<IUserRepository>().To<UserRepository>();
             Bind<IFlightRequestRepository>().To<FlightRequestRepository>();
-            Bind<IFlightRequestService>().To<FlightRequestService>();
-            Bind<IUserSearchService>().To<UserSearchService>();
+            
+            Bind<ICityService>().To<CityService>()
+                .WithConstructorArgument("logger", LoggerFactory.GetServiceLogger(typeof(CityService).FullName));
+
+            Bind<IProfessionService>().To<ProfessionService>()
+                .WithConstructorArgument("logger", LoggerFactory.GetServiceLogger(typeof(ProfessionService).FullName));
+
+            Bind<IAircrewMemberService>().To<AircrewMemberService>()
+                .WithConstructorArgument("logger", LoggerFactory.GetServiceLogger(typeof(AircrewMemberService).FullName));
+
+            Bind<IFlightService>().To<FlightService>()
+                .WithConstructorArgument("logger", LoggerFactory.GetServiceLogger(typeof(FlightService).FullName));
+
+            Bind<IFlightRequestService>().To<FlightRequestService>()
+                .WithConstructorArgument("logger", LoggerFactory.GetServiceLogger(typeof(FlightRequestService).FullName));
+
+            Bind<IUserSearchService>().To<UserSearchService>()
+                .WithConstructorArgument("logger", LoggerFactory.GetServiceLogger(typeof(UserSearchService).FullName));
         }
     }
 }

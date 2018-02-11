@@ -5,11 +5,15 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Airline.Web.App_Start.Identity;
 using Airline.AppData.EF;
-using Airline.AppLogic.Service;
 using Airline.AppData.Repository;
+using Airline.AppLogic.Service;
+using Airline.AppLogic.Logging;
 
 namespace Airline.Web.App_Start
 {
+    /// <summary>
+    /// Configure Owin instance.
+    /// </summary>
     public class OwinConfiguration
     {
         public static void Configuartion(IAppBuilder app)
@@ -30,8 +34,9 @@ namespace Airline.Web.App_Start
         {
             var dbContext = context.Get<AirlineDbContext>();
             var store = new AppUserStore(dbContext);
+            var logger = LoggerFactory.GetServiceLogger(typeof(AppUserManager).FullName);
 
-            return new AppUserManager(store);
+            return new AppUserManager(store, logger);
         }
 
         private static AppSignInManager CreateSignInManager(IdentityFactoryOptions<AppSignInManager> options,
@@ -39,14 +44,5 @@ namespace Airline.Web.App_Start
         {
             return new AppSignInManager(context.GetUserManager<AppUserManager>(), context.Authentication);
         }
-
-        //public static AppUserManagerWrapper CreateUserManagerWrapper(IdentityFactoryOptions<AppUserManagerWrapper> options,
-        //   IOwinContext context)
-        //{
-        //    var dbContext = context.Get<AirlineDbContext>();
-        //    var store = new AppUserStore(dbContext);
-
-        //    return new AppUserManagerWrapper (store);
-        //}
     }
 }

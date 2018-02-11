@@ -3,7 +3,7 @@
 namespace Airline.AppData.Model
 {
     /// <summary>
-    /// This class represent information about aircrew member user.
+    /// Represent information about aircrew member user.
     /// </summary>
     public class AircrewMember : AppUser
     {

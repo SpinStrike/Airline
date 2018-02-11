@@ -60,12 +60,10 @@ namespace Airline.AppData.Repository.Implementation
             _dbSet.Add(t);
         }
 
-
         protected AirlineDbContext GetContext()
         {
             return _dbContext;
         }
-
 
         private IDbSet<T> _dbSet;
         private AirlineDbContext _dbContext;

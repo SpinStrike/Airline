@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
+﻿using System.Collections.Generic;
 using Airline.AppLogic.Dto;
 
 namespace Airline.Web.Areas.Admin.Models

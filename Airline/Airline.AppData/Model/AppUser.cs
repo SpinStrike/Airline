@@ -5,7 +5,7 @@ using Microsoft.AspNet.Identity;
 namespace Airline.AppData.Model
 {
     /// <summary>
-    /// This class represent information about application user.
+    /// Represent information about application user.
     /// </summary>
     public class AppUser : Entity, IUser<Guid>
     {

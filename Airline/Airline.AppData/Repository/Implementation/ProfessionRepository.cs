@@ -1,4 +1,5 @@
-﻿using Airline.AppData.Model;
+﻿using System.Linq;
+using Airline.AppData.Model;
 
 namespace Airline.AppData.Repository.Implementation
 {
@@ -16,6 +17,11 @@ namespace Airline.AppData.Repository.Implementation
             };
 
             this.Add(profession);
+        }
+
+        public override IQueryable<Profession> GetAll()
+        {
+            return base.GetAll().OrderBy(x => x.Name);
         }
     }
 }

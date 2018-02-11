@@ -2,9 +2,9 @@
 @using System
 
 @{
-    ViewBag.Title = "Add User";
+    ViewBag.Title = "Add user";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var maxDate = DateTime.Now;
+    var maxDate = DateTime.Now.AddYears(-20);
 }
 
 <div class="col-md-4"></div>
@@ -27,7 +27,7 @@
         </div>  
         <div class="form-group">
             @Html.LabelFor(x => x.UserDataModel.BornDate, "Born Date")
-            @Html.TextBoxFor(x => x.UserDataModel.BornDate, new { type = "date", max = "2018-01-01", @class = "form-control" })
+            @Html.TextBoxFor(x => x.UserDataModel.BornDate, new { type = "date", max = maxDate.ToString("yyyy-MM-dd"), @class = "form-control" })
             @Html.ValidationMessageFor(x => x.UserDataModel.BornDate)
         </div>
         <div class="form-group">
@@ -56,8 +56,8 @@
                @Html.Label("Administrator" , new { @class= "form-check-label" })
            </div>
            <div>
-               @Html.RadioButtonFor(x => x.UserDataModel.Role, "AirTrafficController", new { id = "userLocationId", @class = "form-check-input", onclick = "showHiden(false)" })
-               @Html.Label("Air Traffic Controller", new { @class = "form-check-label"})
+               @Html.RadioButtonFor(x => x.UserDataModel.Role, "Dispatcher", new { id = "userLocationId", @class = "form-check-input", onclick = "showHiden(false)" })
+               @Html.Label("Dispatcher", new { @class = "form-check-label"})
             </div>
             <div>
                @Html.RadioButtonFor(x => x.UserDataModel.Role, "AircrewMember", new { id = "userNewProfessionId", @class= "form-check-input", onclick="showHiden(true)"})

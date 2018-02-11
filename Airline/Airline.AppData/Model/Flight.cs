@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Airline.AppData.Model
 {
     /// <summary>
-    /// This class represent all information about concrate flight.
+    /// Represent all information about concrate flight.
     /// </summary>
     public class Flight : Entity
     {
@@ -60,6 +61,26 @@ namespace Airline.AppData.Model
             {
                 SetPoint(Direction.To, value);
             }
+        }
+
+
+        public override string ToString()
+        {
+            var resultString = new StringBuilder();
+
+            resultString.Append($"Flight id: {Id}\r\n");
+            resultString.Append("Flight target points (cities):\r\n");
+            resultString.Append($"From: {From.Name}(id: {From.Id})\r\n");
+            resultString.Append($"To: {To.Name}(id: {To.Id})\r\n");
+            resultString.Append($"Departure date: {DepartureDate.ToString("dd-MM-yyyy")}, Arrival date: {ArrivalDate.ToString("dd-MM-yyyy")}\r\n");
+            resultString.Append($"Flight status: {Status.ToString()}\r\n");
+            resultString.Append("Aircrew:\r\n");
+            foreach(var member in Aircrew)
+            {
+                resultString.Append($"{member.FirstName} {member.SecondName}(Id: {member.Id})\r\n");
+            }
+
+            return resultString.ToString();
         }
 
         private FlightPoint GetPoint(Direction status)

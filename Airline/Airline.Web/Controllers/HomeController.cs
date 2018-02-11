@@ -15,10 +15,12 @@ namespace Airline.Web.Controllers
     public class HomeController : Controller
     {
         public HomeController(IFlightService flightService,
-            ICityService cityService)
+            ICityService cityService,
+            IUserSearchService userSearchService)
         {
             _flightService = flightService;
             _cityService = cityService;
+            _userSearchService = userSearchService;
         }
 
         [HttpGet]
@@ -42,6 +44,9 @@ namespace Airline.Web.Controllers
             return View(homepageModel);
         }
 
+        /// <summary>
+        /// Get full information about selected flight.
+        /// </summary>
         [HttpPost]
         public async Task<PartialViewResult> GetFlightInfo(Guid? flightId)
         {
@@ -65,6 +70,9 @@ namespace Airline.Web.Controllers
             return PartialView("GetFlightInfo", task);
         }
 
+        /// <summary>
+        /// Get filtered flight list by parameters.
+        /// </summary>
         [HttpPost]
         public async Task<PartialViewResult> GetFilteredFlightList(Guid? fromCityId,
             Guid? toCityId,
@@ -99,6 +107,14 @@ namespace Airline.Web.Controllers
         }
 
         [HttpGet]
+        public ActionResult Contact()
+        {
+            var agmins = _userSearchService.FindeByRole("Administrator").Result;
+
+            return View(agmins);
+        }
+
+        [HttpGet]
         public ActionResult NotAllowAccess()
         {
             return View();
@@ -106,6 +122,6 @@ namespace Airline.Web.Controllers
 
         private IFlightService _flightService;
         private ICityService _cityService;
-
+        private IUserSearchService _userSearchService;
     }
 }

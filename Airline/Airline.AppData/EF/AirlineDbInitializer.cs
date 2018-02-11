@@ -16,7 +16,7 @@ namespace Airline.AppData.EF
 
             context.Roles.Add(new AppRole()
             {
-                Name = "AirTrafficController"
+                Name = "Dispatcher"//"AirTrafficController"
             });
 
             context.Roles.Add(new AppRole()
@@ -74,8 +74,8 @@ namespace Airline.AppData.EF
                 BornDate = new System.DateTime(1995, 7, 22),
                 PhoneNumber = "+380994564907",
                 Email = "administrator@gmail.com",
-                PasswordHash = "AO3seCe1iN1PidBxVtiPk+6jKf8LXLmHCZAEsi6IzOwCWBHUo9OB2jR04jGRliIf3w==",
-                SecurityStamp = "144f533f-6c0a-4736-9047-bb528264ad99"
+                PasswordHash = "ACt0Dgib0GlueCBq+XvLiEyTqMpvVmZd6rPjiMBQ0Xqm2z08SG318NP1QWSkNqVfiQ==",
+                SecurityStamp = "6880b019-b3f9-491e-92e0-6d769ed09135"
             };
 
             administrator.Roles.Add(adminRole);

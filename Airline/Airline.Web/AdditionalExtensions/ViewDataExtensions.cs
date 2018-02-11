@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
 
 namespace Airline.Web.AdditionalExtensions
 {
     public static class ViewDataExtensions
     {
+        /// <summary>
+        /// Get view model error message by it's key.
+        /// </summary>
         public static string GetErrorMessageByKey(this ViewDataDictionary dataDictionary, string key)
         {
             var keyValues = dataDictionary.ModelState.FirstOrDefault(x => x.Key == key);

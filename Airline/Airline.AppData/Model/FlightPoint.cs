@@ -3,7 +3,7 @@
 namespace Airline.AppData.Model
 {
     /// <summary>
-    /// This class represent relation between flight and from/to city.
+    /// Represent relation between flight and from/to city.
     /// </summary>
     public class FlightPoint
     {

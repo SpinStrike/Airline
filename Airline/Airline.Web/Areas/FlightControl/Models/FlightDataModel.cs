@@ -22,12 +22,10 @@ namespace Airline.Web.Areas.FlightControl.Models
         public Guid ToCity { get; set; }
 
         [Required(ErrorMessage = "Departure date field can't be empty")]
-        //[MinDate(ErrorMessage = "Invalid date.")]
         [DepartureDateValid("ArrivalDate", ErrorMessage = "Departure date must be earlier than arrival.")]
         public DateTime DepartureDate { get; set; }
 
         [Required(ErrorMessage = "Arrival date field can't be empty")]
-        //[MinDate(ErrorMessage = "Invalid date.")]
         [ArrivalDateValid("DepartureDate", ErrorMessage = "Arrival date must be later than departure.")]
         public DateTime ArrivalDate { get; set; }
 

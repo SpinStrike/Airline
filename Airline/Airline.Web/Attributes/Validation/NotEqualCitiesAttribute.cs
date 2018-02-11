@@ -3,6 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Airline.Web.Attributes.Validation
 {
+    /// <summary>
+    /// Validate inequality of two cities.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Property)]
     public class NotEqualCitiesAttribute : ValidationAttribute
     {
         public NotEqualCitiesAttribute(string field)

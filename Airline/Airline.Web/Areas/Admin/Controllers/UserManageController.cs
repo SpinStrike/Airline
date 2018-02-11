@@ -97,7 +97,7 @@ namespace Airline.Web.Areas.Admin.Controllers
                     var user = _userManager.FindByIdAsync(userId.Value).Result;
                     if(user == null)
                     {
-                        return new Tuple<string, bool>("User is not found.", false);
+                        return new Tuple<string, bool>("User was not found.", false);
                     }
 
                     var isAircreMember = _userManager.IsInRoleAsync(user.Id, "AircrewMember").Result;
@@ -119,7 +119,7 @@ namespace Airline.Web.Areas.Admin.Controllers
                     var deletingResult = _userManager.DeleteAsync(user).Result;
                     if (deletingResult.Succeeded)
                     {
-                        return new Tuple<string, bool>("Success. User is deleted.", true);
+                        return new Tuple<string, bool>("Success. User has been deleted.", true);
                     }
 
                     return new Tuple<string, bool>("Try again.Some troubles at service.", false);

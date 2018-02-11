@@ -5,6 +5,9 @@ namespace Airline.Web.AdditionalExtensions
 {
     public static class HttpUserIdentityExtensions
     {
+        /// <summary>
+        /// Get full username of authorized user by using Identity claim.
+        /// </summary>
         public static string GetFullNameUser(this IIdentity identity)
         {
             if (identity == null)
@@ -18,6 +21,9 @@ namespace Airline.Web.AdditionalExtensions
             return $"{firstName.Value} {secondName.Value}";
         }
 
+        /// <summary>
+        /// Get first name of authorized user by using Identity claim.
+        /// </summary>
         public static string GetFirstNameUser(this IIdentity identity)
         {
             if (identity == null)
@@ -30,6 +36,9 @@ namespace Airline.Web.AdditionalExtensions
             return firstName.Value;
         }
 
+        /// <summary>
+        /// Get second name of authorized user by using Identity claim.
+        /// </summary>
         public static string GetSecondNameUser(this IIdentity identity)
         {
             if (identity == null)
@@ -42,6 +51,9 @@ namespace Airline.Web.AdditionalExtensions
             return secondName.Value;
         }
 
+        /// <summary>
+        /// Get identifier of authorized user by using Identity claim.
+        /// </summary>
         public static string GetIdUser(this IIdentity identity)
         {
             if (identity == null)

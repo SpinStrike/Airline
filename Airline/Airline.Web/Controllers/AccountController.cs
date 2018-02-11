@@ -251,6 +251,9 @@ namespace Airline.Web.Controllers
             return View("UserInformation", model);
         }
 
+        /// <summary>
+        /// Reset password by administrator.
+        /// </summary>
         [HttpPost]
         [Authorize]
         public ActionResult UpdatePassword(PasswordModel passwordModel)
@@ -290,6 +293,9 @@ namespace Airline.Web.Controllers
             return View("UserInformation", model);
         }
 
+        /// <summary>
+        /// Change password by user.
+        /// </summary>
         [HttpPost]
         [Authorize]
         public ActionResult ChangePsssword(ChangePasswordModel changePasswordModel)

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data.Entity;
 using Airline.AppData.Model;
-using Airline.AppData.EF;
 
 namespace Airline.AppData.Repository.Implementation
 {
@@ -11,29 +10,32 @@ namespace Airline.AppData.Repository.Implementation
     {
         public AircrewMemberReository(IDbRepository dbRepository)
             :base(dbRepository.GetDbInstance(), dbRepository.GetDbInstance().Set<AircrewMember>())
-        {
-            _dbContext = dbRepository.GetDbInstance();
-        }
+        {}
 
         public IQueryable<AircrewMember> FindByCurentPosition(Guid idCity)
         {
-            return GetAircrewMembersDatatSet().Include(x => x.Profession)
-                .Include(x => x.CurrentLocation)
-                .Where(x => x.CityId.Equals(idCity));
+            //return GetAircrewMembersDatatSet().Include(x => x.Profession)
+            //    .Include(x => x.CurrentLocation)
+            //    .Where(x => x.CityId.Equals(idCity))
+            //    .OrderBy(x => x.SecondName)
+            //    .ThenBy(x => x.FirstName);
+            return GetAll().Where(x => x.CityId.Equals(idCity));
         }
 
         public IQueryable<AircrewMember> FindByProfession(Guid idProfession)
         {
-            return GetAircrewMembersDatatSet().Include(x => x.Profession)
-                .Include(x => x.CurrentLocation)
-                .Where(x => x.ProfessionId.Equals(idProfession));
+            return //GetAircrewMembersDatatSet().Include(x => x.Profession)
+                   //.Include(x => x.CurrentLocation)
+                GetAll().Where(x => x.ProfessionId.Equals(idProfession));
         }
 
         public IQueryable<AircrewMember> FindBySecondName(string secondName)
         {
-            return GetAircrewMembersDatatSet().Include(x => x.Profession)
-                .Include(x => x.CurrentLocation)
-                .Where(x => x.SecondName.ToUpper().Equals(secondName.ToUpper()));
+            //return GetAircrewMembersDatatSet().Include(x => x.Profession)
+            //    .Include(x => x.CurrentLocation)
+            //    .Where(x => x.SecondName.ToUpper().Equals(secondName.ToUpper()));
+
+            return GetAll().Where(x => x.SecondName.ToUpper().Equals(secondName.ToUpper()));
         }
 
         public override AircrewMember FindById(Guid aircrewMemberId)
@@ -50,23 +52,19 @@ namespace Airline.AppData.Repository.Implementation
         public override IQueryable<AircrewMember> GetAll()
         {
             return GetAircrewMembersDatatSet().Include(x => x.Profession)
-                .Include(x => x.CurrentLocation);
+                .Include(x => x.CurrentLocation)
+                .OrderBy(x => x.SecondName)
+                .ThenBy(x => x.FirstName);
         }
 
-        public void SetProfession(Guid aircrewMemberId, Profession profession)
+        public void SetProfession(AircrewMember aircrewMember, Profession profession)
         {
-            var targetUser = GetAircrewMembersDatatSet()
-                .FirstOrDefault(x => x.Id.Equals(aircrewMemberId));
-
-            targetUser.Profession = profession;
+            aircrewMember.Profession = profession;
         }
 
-        public void SetCity(Guid aircrewMemberId, City City)
+        public void SetCity(AircrewMember aircrewMember, City City)
         {
-            var targetUser = GetAircrewMembersDatatSet()
-                .FirstOrDefault(x => x.Id.Equals(aircrewMemberId));
-
-            targetUser.CurrentLocation = City;
+            aircrewMember.CurrentLocation = City;
         }
 
         public void SetStatus(IEnumerable<Guid> aircrewMemberIds, AircrewMemberStatus status)
@@ -81,14 +79,12 @@ namespace Airline.AppData.Repository.Implementation
 
         private IDbSet<AircrewMember> GetAircrewMembersDatatSet()
         {
-            return _dbContext.Set<AircrewMember>();
+            return GetContext().Set<AircrewMember>();
         }
 
         private IDbSet<Profession> GetProfessionsDatatSet()
         {
-            return _dbContext.Set<Profession>();
+            return GetContext().Set<Profession>();
         }
-
-        private AirlineDbContext _dbContext;
     }
 }

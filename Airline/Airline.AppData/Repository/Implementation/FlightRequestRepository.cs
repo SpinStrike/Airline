@@ -41,5 +41,10 @@ namespace Airline.AppData.Repository.Implementation
             return GetAll().Include(x => x.RequestBrokers.Select(y => y.User ))
                 .FirstOrDefault(x => x.Id == id);
         }
+
+        public override IQueryable<FlightRequest> GetAll()
+        {
+            return base.GetAll().OrderByDescending(x => x.SendTime);
+        }
     }
 }
